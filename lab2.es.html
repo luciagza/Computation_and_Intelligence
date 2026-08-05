@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Sesión de laboratorio 2: Preprocesamiento de datos – Computation and Intelligence</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./favicon.ico" rel="icon">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-82aba43ae7933661fba683bbc771ca3c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Computation and Intelligence</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">🏠 Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./setup.html"> 
+<span class="menu-text">🔧 Setup</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-labs" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">🔬 Labs</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-labs">    
+        <li>
+    <a class="dropdown-item" href="./lab1.html">
+ <span class="dropdown-text">Lab 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./lab2.html">
+ <span class="dropdown-text">Lab 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./lab3.html">
+ <span class="dropdown-text">Lab 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./lab4.html">
+ <span class="dropdown-text">Lab 4</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./lab5.html">
+ <span class="dropdown-text">Lab 5</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./lab6.html">
+ <span class="dropdown-text">Lab 6</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="javascript:void(0)"> 
+<span class="menu-text">🌐</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title"><strong>Contenido</strong></h2>
+   
+  <ul>
+  <li><a href="#objetivos-de-la-sesión" id="toc-objetivos-de-la-sesión" class="nav-link active" data-scroll-target="#objetivos-de-la-sesión">Objetivos de la sesión</a></li>
+  <li><a href="#actividades-propuestas" id="toc-actividades-propuestas" class="nav-link" data-scroll-target="#actividades-propuestas">Actividades propuestas</a>
+  <ul>
+  <li><a href="#limpieza-de-datos" id="toc-limpieza-de-datos" class="nav-link" data-scroll-target="#limpieza-de-datos">1. Limpieza de datos</a></li>
+  <li><a href="#particiones-de-datos" id="toc-particiones-de-datos" class="nav-link" data-scroll-target="#particiones-de-datos">2. Particiones de datos</a>
+  <ul>
+  <li><a href="#particiones-aleatorias" id="toc-particiones-aleatorias" class="nav-link" data-scroll-target="#particiones-aleatorias">2.1 Particiones aleatorias</a></li>
+  <li><a href="#particiones-estratificadas" id="toc-particiones-estratificadas" class="nav-link" data-scroll-target="#particiones-estratificadas">2.2 Particiones estratificadas</a></li>
+  <li><a href="#validación-cruzada" id="toc-validación-cruzada" class="nav-link" data-scroll-target="#validación-cruzada">2.3 Validación cruzada</a></li>
+  <li><a href="#conjunto-de-validación" id="toc-conjunto-de-validación" class="nav-link" data-scroll-target="#conjunto-de-validación">2.4 Conjunto de validación</a></li>
+  </ul></li>
+  <li><a href="#normalización-de-datos" id="toc-normalización-de-datos" class="nav-link" data-scroll-target="#normalización-de-datos">3. Normalización de datos</a>
+  <ul>
+  <li><a href="#normalización-min-max" id="toc-normalización-min-max" class="nav-link" data-scroll-target="#normalización-min-max">3.1 Normalización Min-Max</a></li>
+  <li><a href="#estandarización" id="toc-estandarización" class="nav-link" data-scroll-target="#estandarización">3.2 Estandarización</a></li>
+  <li><a href="#efectos-de-los-valores-atípicos-en-la-normalización" id="toc-efectos-de-los-valores-atípicos-en-la-normalización" class="nav-link" data-scroll-target="#efectos-de-los-valores-atípicos-en-la-normalización">3.3 Efectos de los valores atípicos en la normalización</a></li>
+  <li><a href="#normalización-y-particiones-de-datos" id="toc-normalización-y-particiones-de-datos" class="nav-link" data-scroll-target="#normalización-y-particiones-de-datos">3.4 Normalización y particiones de datos</a></li>
+  </ul></li>
+  <li><a href="#imputación-de-datos" id="toc-imputación-de-datos" class="nav-link" data-scroll-target="#imputación-de-datos">4. Imputación de datos</a>
+  <ul>
+  <li><a href="#eliminación-de-valores-faltantes" id="toc-eliminación-de-valores-faltantes" class="nav-link" data-scroll-target="#eliminación-de-valores-faltantes">4.1 Eliminación de valores faltantes</a></li>
+  <li><a href="#imputación-de-valores-faltantes" id="toc-imputación-de-valores-faltantes" class="nav-link" data-scroll-target="#imputación-de-valores-faltantes">4.2 Imputación de valores faltantes</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#mini-proyecto-preparando-datos-para-el-modelado" id="toc-mini-proyecto-preparando-datos-para-el-modelado" class="nav-link" data-scroll-target="#mini-proyecto-preparando-datos-para-el-modelado">Mini-proyecto: Preparando datos para el modelado</a></li>
+  <li><a href="#nota-final" id="toc-nota-final" class="nav-link" data-scroll-target="#nota-final">Nota final</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content column-page-right" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Sesión de laboratorio 2: Preprocesamiento de datos</h1>
+</div>
+
+
+
+<div class="quarto-title-meta column-page-right">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="objetivos-de-la-sesión" class="level1">
+<h1>Objetivos de la sesión</h1>
+<div class="objective-card">
+<p>🎯 <strong>Objetivo general:</strong> Aprender a preparar y preprocesar datos antes de modelar, asegurando que los conjuntos de datos con los que trabajamos sean consistentes, significativos y estén listos para los algoritmos de aprendizaje automático.</p>
+</div>
+<p><img src="_resources/images/processing.gif" class="img-right img-fluid"></p>
+<p>En proyectos reales, la calidad de los datos determina en gran medida la calidad del modelo. No importa cuán sofisticado sea un algoritmo, si los datos de entrada son deficientes, las predicciones serán poco fiables. El preprocesamiento es la etapa donde limpiamos, transformamos y estructuramos los datos para que los modelos puedan aprender de manera efectiva y sin distorsiones.</p>
+<p>En esta sesión, desarrollaremos una comprensión de por qué el preprocesamiento es esencial y luego lo aplicaremos en la práctica. Verás cómo identificar y seleccionar atributos relevantes, tratar valores faltantes, normalizar variables que existen en escalas muy diferentes e investigar el efecto de los valores atípicos. También aprenderás por qué es crucial separar los datos en subconjuntos de entrenamiento y prueba antes de la evaluación. Finalmente, compararás conjuntos de datos en bruto y preprocesados para apreciar cuánto pueden cambiar los resultados en la práctica. Dominar estas ideas te ayudará a evitar errores comunes como el data leakage, modelos sesgados o sobreajuste.</p>
+<hr>
+</section>
+<section id="actividades-propuestas" class="level1">
+<h1>Actividades propuestas</h1>
+<p>A lo largo de estas actividades, trabajarás con el conjunto de datos <code>Chronic Kidney Disease</code>. Este conjunto contiene información sobre pacientes con enfermedad renal crónica, incluyendo diversos atributos médicos y demográficos. Es un benchmark común para tareas de clasificación, donde el objetivo es predecir la presencia o ausencia de la enfermedad en función de otras variables. Puedes descargarlo desde <a href="https://www.kaggle.com/datasets/mansoordaku/ckdisease/download">este enlace</a> y puedes encontrar una explicación de cada atributo en <a href="https://archive.ics.uci.edu/dataset/336/chronic+kidney+disease">UCI</a>. Carga el conjunto de datos como hicimos en la sesión anterior (usando el widget <strong>CSV File Import</strong>). ¡Una vez listo, podemos comenzar a preprocesarlo!</p>
+<hr>
+<section id="limpieza-de-datos" class="level2">
+<h2 class="anchored" data-anchor-id="limpieza-de-datos">1. Limpieza de datos</h2>
+<div class="objective-card">
+<p>🎯 <strong>Objetivo:</strong> Identificar y tratar categorías de texto.</p>
+</div>
+<p>El primer paso en el preprocesamiento es asegurarse de que los datos sean limpios y consistentes. Esto implica identificar y tratar categorías de texto, así como asegurarse de que las variables categóricas estén correctamente formateadas.</p>
+<p><img src="_resources/images/cleaning.jpg" class="img-right img-fluid"></p>
+<p>Visualiza el contenido del conjunto de datos y encuentra cualquier error que pueda haber ocurrido durante la recopilación. Identifica las categorías de texto y busca variables que contengan datos de texto, como “yes”/“no” u otros valores categóricos, y asegúrate de que los valores únicos estén correctamente codificados. Puedes usar el widget <strong>Edit Domain</strong> para renombrar o recodificar estas categorías si es necesario. Puede haber inconsistencias en cómo se representan las categorías (por ejemplo, “yes”, “Yes”, “YES”). Estandariza estas entradas para asegurar uniformidad.</p>
+<p>Asegúrate de que la variable correcta esté establecida como variable objetivo (la que quieres predecir). En este caso, debe ser la variable que indica la presencia o ausencia de enfermedad renal crónica (CKD). Puedes usar el widget <strong>Select Columns</strong> para establecer la variable objetivo adecuadamente.</p>
+<div class="question-card">
+<p>📝 <strong>Preguntas:</strong></p>
+<ol type="1">
+<li>¿Hay inconsistencias en las categorías de texto? Si es así, ¿cómo las estandarizaste?</li>
+<li>¿Qué variable estableciste como variable objetivo y por qué?</li>
+<li>¿Encontraste otros problemas en el conjunto de datos que debían ser tratados? Si es así, ¿cuáles?</li>
+</ol>
+</div>
+<!-- Solución
+1. Sí, había inconsistencias como "yes", "Yes" y "YES". Las estandaricé todas a "yes" usando el widget Edit Domain.
+2. Establecí la variable que indica la presencia o ausencia de CKD como variable objetivo porque es el resultado que queremos predecir.
+3. Encontré algunos valores faltantes en ciertos atributos, que trataré en el siguiente paso.
+    -->
+<hr>
+</section>
+<section id="particiones-de-datos" class="level2">
+<h2 class="anchored" data-anchor-id="particiones-de-datos">2. Particiones de datos</h2>
+<div class="objective-card">
+<p>🎯 <strong>Objetivo:</strong> Comprender la importancia de realizar particiones en el conjunto de datos.</p>
+</div>
+<p>Cuando construimos un modelo de aprendizaje automático, queremos que aprenda patrones que pueda aplicar a nuevas situaciones, no solo memorizar los ejemplos que le damos. Para comprobar si esto ocurre, necesitamos separar nuestros datos en dos partes:</p>
+<ul>
+<li><strong>Conjunto de entrenamiento:</strong> los datos que el modelo usa para aprender.</li>
+<li><strong>Conjunto de prueba:</strong> los datos que reservamos para comprobar cómo funciona el modelo en ejemplos no vistos.</li>
+</ul>
+<p>Si solo probamos el modelo con los mismos datos con los que fue entrenado, los resultados pueden ser engañosos. El modelo podría parecer perfecto simplemente porque ha memorizado las respuestas, pero esto nos dice poco sobre cómo se comportará en el mundo real.</p>
+<p><img src="_resources/images/exam.gif" class="img-right img-fluid"></p>
+<p>Piensa en ello como estudiar para un examen:</p>
+<ul>
+<li>Practicas con ejercicios del libro (<strong>entrenamiento</strong>).</li>
+<li>Luego haces el examen real, que tiene preguntas diferentes (<strong>prueba</strong>).</li>
+</ul>
+<p>Solo si te va bien en el examen puedes estar seguro de que realmente entiendes el material, en vez de solo memorizar los ejercicios de práctica. El aprendizaje automático funciona igual: probar con datos nuevos muestra si el modelo realmente ha aprendido y puede generalizar a casos futuros.</p>
+<section id="particiones-aleatorias" class="level3">
+<h3 class="anchored" data-anchor-id="particiones-aleatorias">2.1 Particiones aleatorias</h3>
+<p>Comienza creando una partición aleatoria del conjunto de datos en conjuntos de entrenamiento y prueba. Una división común es 70% para entrenamiento y 30% para prueba, pero puedes elegir diferentes proporciones según tus necesidades.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="_resources/images/randomsampling.png" class="img-center img-fluid figure-img"></p>
+<figcaption>Fuente: https://blogs.sas.com/content/subconsciousmusings/</figcaption>
+</figure>
+</div>
+<p>Usa el widget <strong>Data Sampler</strong> para crear una partición aleatoria del conjunto de datos. Establece el tipo de muestreo en “Random” y elige una proporción para el conjunto de entrenamiento (por ejemplo, 70% para entrenamiento y 30% para prueba). Conecta la salida del <strong>Data Sampler</strong> a dos widgets <strong>Data Table</strong> para visualizar ambos conjuntos. Debes asegurarte de que la entrada de cada tabla sea la salida correspondiente del <strong>Data Sampler</strong> (una contiene el subconjunto de entrenamiento y la otra el de prueba).</p>
+<p>Visualiza cómo se distribuyen dos características relevantes en ambos subconjuntos. Puedes usar el widget <strong>Scatter Plot</strong> para visualizar la relación entre dos características numéricas y el widget <strong>Distributions</strong> para ver cómo se distribuyen las características individuales. Compara las distribuciones en los conjuntos de entrenamiento y prueba para ver si son similares.</p>
+<p>Luego repite el proceso con 95% para entrenamiento y 5% para prueba.</p>
+<div class="question-card">
+<p>📝 <strong>Preguntas:</strong></p>
+<ol type="1">
+<li>¿Qué proporción elegiste para los conjuntos de entrenamiento y prueba? ¿Por qué? Cambia la proporción y observa cómo afecta las distribuciones.</li>
+<li>¿Las distribuciones de las características clave se ven similares en ambos subconjuntos? Si no, ¿qué diferencias observaste?</li>
+<li>¿Por qué es importante tener distribuciones similares en los conjuntos de entrenamiento y prueba?</li>
+<li>¿Cómo afecta el cambio de la proporción de la división (por ejemplo, 70/30 vs.&nbsp;95/5) a las distribuciones en los conjuntos de entrenamiento y prueba?</li>
+</ol>
+</div>
+<!-- Solución
+
+1. Una elección común es 70% para entrenamiento y 30% para prueba, ya que proporciona un buen equilibrio entre tener suficientes datos para entrenar el modelo y suficientes para evaluar su rendimiento. Cambiar la proporción puede afectar las distribuciones; por ejemplo, un conjunto de prueba muy pequeño puede no representar bien el conjunto de datos general. Sin embargo, la elección puede depender del conjunto de datos y el problema específico.
+2. Las distribuciones deberían ser similares idealmente, pero puede haber algunas diferencias debido a la aleatoriedad del muestreo. Si se observan diferencias significativas, podría indicar que el muestreo aleatorio no capturó bien la distribución general de los datos.
+3. Las distribuciones similares son importantes para asegurar que el modelo se evalúe con datos representativos de lo que fue entrenado. Si el conjunto de prueba tiene una distribución diferente, el rendimiento del modelo puede no reflejar con precisión su capacidad de generalización.
+ -->
+</section>
+<section id="particiones-estratificadas" class="level3">
+<h3 class="anchored" data-anchor-id="particiones-estratificadas">2.2 Particiones estratificadas</h3>
+<p>En algunos casos, especialmente cuando se trabaja con conjuntos de datos desbalanceados (donde una clase es mucho más común que otra), el muestreo aleatorio podría no preservar la distribución de clases en ambos subconjuntos. Esto puede llevar a resultados engañosos al evaluar el modelo. Para solucionar esto, podemos usar el muestreo estratificado, que asegura que las proporciones de clase se mantengan en los conjuntos de entrenamiento y prueba.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="_resources/images/stratifiedsampling.png" class="img-center img-fluid figure-img"></p>
+<figcaption>Fuente: https://blogs.sas.com/content/subconsciousmusings/</figcaption>
+</figure>
+</div>
+<p>Usa nuevamente el widget <strong>Data Sampler</strong>, pero esta vez establece el tipo de muestreo en “Stratified”. Elige la variable objetivo (la que indica la presencia o ausencia de CKD) para asegurar que ambos subconjuntos mantengan la misma distribución de clases que el conjunto original. Luego repite el proceso de visualizar las distribuciones de las características clave en ambos subconjuntos usando el widget <strong>Scatter Plot</strong>.</p>
+<div class="question-card">
+<p>📝 <strong>Preguntas:</strong></p>
+<ol type="1">
+<li>¿En qué se diferencia el muestreo estratificado del muestreo aleatorio en cuanto a la distribución de clases?</li>
+<li>¿Notaste alguna diferencia en las distribuciones de las características clave entre los conjuntos de entrenamiento y prueba al usar muestreo estratificado?</li>
+<li>¿Por qué es especialmente importante el muestreo estratificado en conjuntos de datos desbalanceados?</li>
+</ol>
+</div>
+<!-- Solución
+
+1. El muestreo estratificado asegura que las proporciones de clase se mantengan en los conjuntos de entrenamiento y prueba, mientras que el muestreo aleatorio puede no preservar estas proporciones, especialmente en conjuntos desbalanceados.
+2. Al usar muestreo estratificado, las distribuciones de las características clave en ambos subconjuntos deberían ser más similares en comparación con el muestreo aleatorio, especialmente para la variable objetivo.
+3. El muestreo estratificado es importante en conjuntos desbalanceados porque evita que una clase esté subrepresentada en alguno de los conjuntos, lo que podría llevar a un rendimiento sesgado del modelo y resultados de evaluación poco fiables.
+ -->
+</section>
+<section id="validación-cruzada" class="level3">
+<h3 class="anchored" data-anchor-id="validación-cruzada">2.3 Validación cruzada</h3>
+<p>Además de crear una sola división de entrenamiento y prueba, otro enfoque común para evaluar modelos de aprendizaje automático es la validación cruzada. Esta técnica consiste en dividir el conjunto de datos en múltiples subconjuntos (o “folds”) y entrenar/probar el modelo varias veces, cada vez usando un fold diferente como conjunto de prueba y los restantes como conjunto de entrenamiento. Esto ayuda a asegurar que el rendimiento del modelo sea robusto y no dependa de una división particular de los datos.</p>
+<p><img src="_resources/images/Cross validation.png" class="img-center img-fluid"></p>
+<p>Implementaremos la validación cruzada en la próxima sesión de laboratorio cuando empecemos a construir y evaluar modelos. Por ahora, solo entiende que es una técnica poderosa para evaluar el rendimiento de los modelos de manera más fiable.</p>
+</section>
+<section id="conjunto-de-validación" class="level3">
+<h3 class="anchored" data-anchor-id="conjunto-de-validación">2.4 Conjunto de validación</h3>
+<p><img src="_resources/images/validation.gif" class="img-right img-fluid"></p>
+<p>Además de los conjuntos de entrenamiento y prueba, a menudo es útil crear un tercer subconjunto llamado conjunto de validación. Este conjunto se utiliza durante el desarrollo del modelo para ajustar hiperparámetros y tomar decisiones sobre la arquitectura del modelo sin tocar el conjunto de prueba. El conjunto de validación ayuda a evitar el sobreajuste al conjunto de entrenamiento y proporciona una evaluación imparcial del modelo durante el desarrollo.</p>
+<p>Implementaremos el conjunto de validación en la próxima sesión de laboratorio. Por ahora, solo comprende su propósito e importancia.</p>
+<hr>
+</section>
+</section>
+<section id="normalización-de-datos" class="level2">
+<h2 class="anchored" data-anchor-id="normalización-de-datos">3. Normalización de datos</h2>
+<div class="objective-card">
+<p>🎯 <strong>Objetivo:</strong> Comprender la importancia de normalizar los datos.</p>
+</div>
+<p>Cuando se trabaja con conjuntos de datos que contienen características numéricas en diferentes escalas, es importante normalizar los datos. La normalización asegura que todas las características contribuyan por igual a los cálculos de distancia utilizados por muchos algoritmos de aprendizaje automático. Si una característica tiene un rango mucho mayor que otras, puede dominar la métrica de distancia y llevar a resultados sesgados. Por ejemplo, si una característica varía de 0 a 1 y otra de 0 a 1000, la segunda tendrá un impacto mucho mayor en los cálculos de distancia.</p>
+<section id="normalización-min-max" class="level3">
+<h3 class="anchored" data-anchor-id="normalización-min-max">3.1 Normalización Min-Max</h3>
+<p>La normalización Min-Max es una técnica común para escalar características a un rango específico, normalmente [0, 1]. La fórmula es:</p>
+<p><span class="math display">\[
+X' = \frac{X - X_{min}}{X_{max} - X_{min}}
+\]</span></p>
+<p>donde:</p>
+<ul>
+<li><span class="math inline">\(X\)</span> es el valor original,</li>
+<li><span class="math inline">\(X_{min}\)</span> es el valor mínimo de la característica,</li>
+<li><span class="math inline">\(X_{max}\)</span> es el valor máximo de la característica,</li>
+<li><span class="math inline">\(X'\)</span> es el valor normalizado.</li>
+</ul>
+<p>Pasa tus datos al widget <strong>Continuize</strong> y conecta la salida a un widget <strong>Distributions</strong> para visualizar el efecto de la normalización en las características. Visualiza cómo se distribuyen dos características relevantes antes y después de aplicar la normalización Min-Max.</p>
+<div class="question-card">
+<p>📝 <strong>Preguntas:</strong></p>
+<ol type="1">
+<li>¿Cuáles son las ventajas de usar la normalización Min-Max?</li>
+<li>¿Hay posibles inconvenientes al usar la normalización Min-Max?</li>
+<li>¿Cómo cambiaron las distribuciones de las características tras aplicar la normalización Min-Max?</li>
+</ol>
+</div>
+<!-- Solución
+1. La normalización Min-Max escala las características a un rango específico, lo que puede mejorar el rendimiento de algoritmos que dependen de cálculos de distancia. También preserva las relaciones entre los puntos de datos originales.
+2. Un posible inconveniente es que la normalización Min-Max es sensible a los valores atípicos. Si el conjunto de datos contiene valores extremos, pueden afectar significativamente la escala de los demás puntos.
+3. Tras aplicar la normalización Min-Max, las distribuciones de las características deberían estar escaladas al rango [0, 1]. La forma de las distribuciones puede permanecer similar, pero los valores se ajustarán al rango especificado.
+-->
+</section>
+<section id="estandarización" class="level3">
+<h3 class="anchored" data-anchor-id="estandarización">3.2 Estandarización</h3>
+<p>La estandarización (también conocida como normalización Z-score) es otra técnica común para escalar características. Transforma los datos para que tengan media 0 y desviación estándar 1. La fórmula es:</p>
+<p><span class="math display">\[
+X' = \frac{X - \mu}{\sigma}
+\]</span></p>
+<p>donde:</p>
+<ul>
+<li><span class="math inline">\(X\)</span> es el valor original,</li>
+<li><span class="math inline">\(\mu\)</span> es la media de la característica,</li>
+<li><span class="math inline">\(\sigma\)</span> es la desviación estándar de la característica,</li>
+<li><span class="math inline">\(X'\)</span> es el valor normalizado.</li>
+</ul>
+<p>Cambia el widget <strong>Continuize</strong> a “Standardization” y conecta la salida a un widget <strong>Distributions</strong> para visualizar el efecto de la estandarización en las características. Visualiza cómo se distribuyen dos características relevantes antes y después de aplicar la estandarización.</p>
+<div class="question-card">
+<p>📝 <strong>Preguntas:</strong></p>
+<ol type="1">
+<li>¿Cuáles son las ventajas de usar la estandarización?</li>
+<li>¿Hay posibles inconvenientes al usar la estandarización?</li>
+<li>¿Cómo cambiaron las distribuciones de las características tras aplicar la estandarización?</li>
+</ol>
+</div>
+<!-- Solución
+1. La estandarización transforma las características para que tengan media 0 y desviación estándar 1, lo que puede mejorar el rendimiento de algoritmos que asumen datos distribuidos normalmente. Es menos sensible a los valores atípicos que la normalización Min-Max.
+2. Un posible inconveniente es que la estandarización asume que los datos están distribuidos normalmente. Si los datos están muy sesgados, este método puede no ser apropiado.
+3. Tras aplicar la estandarización, las distribuciones de las características deberían estar centradas en 0 con desviación estándar 1. La forma de las distribuciones puede permanecer similar, pero los valores se ajustarán a la escala estandarizada.
+-->
+</section>
+<section id="efectos-de-los-valores-atípicos-en-la-normalización" class="level3">
+<h3 class="anchored" data-anchor-id="efectos-de-los-valores-atípicos-en-la-normalización">3.3 Efectos de los valores atípicos en la normalización</h3>
+<p><img src="_resources/images/bloodpressure.jpeg" class="img-right img-fluid"></p>
+<p>Los valores atípicos son valores extremos que difieren significativamente de otras observaciones en el conjunto de datos. Pueden surgir por errores de medición, errores de entrada de datos o verdadera variabilidad en los datos. Los valores atípicos pueden tener un impacto significativo en las técnicas de normalización, especialmente en la normalización Min-Max, ya que pueden distorsionar la escala de los demás puntos.</p>
+<p>Observa la variable <code>bp</code> (presión arterial) en el conjunto de datos. Usa el widget <strong>Scatter Plot</strong> y/o <strong>Box Plot</strong> para visualizar la distribución de esta variable e identificar posibles valores atípicos. Luego, aplica tanto la normalización Min-Max como la estandarización al conjunto de datos usando el widget <strong>Continuize</strong> y visualiza cómo cambian las distribuciones de la variable <code>bp</code> tras la normalización.</p>
+<div class="question-card">
+<p>📝 <strong>Preguntas:</strong></p>
+<ol type="1">
+<li>¿Cómo afectan los valores atípicos a la normalización Min-Max?</li>
+<li>¿Cómo afectan los valores atípicos a la estandarización?</li>
+</ol>
+</div>
+<!-- Solución
+1. Los valores atípicos pueden afectar significativamente la normalización Min-Max al ampliar el rango de la característica, lo que puede hacer que los demás puntos se compriman en un rango más pequeño.
+2. Los valores atípicos también pueden afectar la estandarización al aumentar la desviación estándar, lo que puede hacer que los demás puntos se reduzcan.
+-->
+</section>
+<section id="normalización-y-particiones-de-datos" class="level3">
+<h3 class="anchored" data-anchor-id="normalización-y-particiones-de-datos">3.4 Normalización y particiones de datos</h3>
+<p>Es crucial aplicar las técnicas de normalización solo al conjunto de entrenamiento y luego usar los mismos parámetros (por ejemplo, mínimo, máximo, media, desviación estándar) para transformar el conjunto de prueba. Esto previene el data leakage, que ocurre cuando información del conjunto de prueba se usa durante el entrenamiento, lo que lleva a estimaciones de rendimiento demasiado optimistas.</p>
+<p>Para lograr esto en Orange, puedes usar el widget <strong>Apply Domain</strong> para ajustar los parámetros de normalización en el conjunto de entrenamiento y luego aplicarlos al conjunto de prueba. Para hacerlo, conecta la salida del <strong>Data Sampler</strong> (conjunto de entrenamiento) al widget <strong>Continuize</strong>, y luego conecta la salida del widget <strong>Continuize</strong> al widget <strong>Apply Domain</strong> y configúralo como <code>Template Data</code>. Finalmente, conecta la salida del conjunto de prueba del <strong>Data Sampler</strong> al widget <strong>Apply Domain</strong> y configúralo como <code>Data</code>. Así, los parámetros de normalización se aprenden del conjunto de entrenamiento y se aplican al conjunto de prueba.</p>
+<div class="question-card">
+<p>📝 <strong>Preguntas:</strong></p>
+<ol type="1">
+<li>¿Por qué es importante aplicar las técnicas de normalización solo al conjunto de entrenamiento?</li>
+<li>¿Qué podría pasar si usamos el conjunto de prueba para ajustar los parámetros de normalización?</li>
+<li>¿Cómo funciona el widget <strong>Apply Domain</strong> en Orange para la normalización?</li>
+</ol>
+</div>
+<!-- Solución
+1. Es importante aplicar las técnicas de normalización solo al conjunto de entrenamiento para evitar el data leakage, que puede llevar a estimaciones de rendimiento demasiado optimistas.
+2. Si usamos el conjunto de prueba para ajustar los parámetros de normalización, podríamos introducir información del conjunto de prueba en el proceso de entrenamiento, lo que lleva a resultados sesgados y una evaluación inexacta del rendimiento del modelo.
+3. El widget **Apply Domain** en Orange permite ajustar los parámetros de normalización en el conjunto de entrenamiento y luego aplicarlos al conjunto de prueba, asegurando que el conjunto de prueba se transforme usando los mismos parámetros aprendidos de los datos de entrenamiento.
+-->
+<div class="final-note-card">
+<p>La elección entre técnicas de normalización como Min-Max y estandarización depende de las características específicas del conjunto de datos y de los requisitos del algoritmo de aprendizaje automático que se utilice. La normalización Min-Max suele preferirse cuando los datos están distribuidos uniformemente y el algoritmo requiere un rango específico (por ejemplo, [0, 1]). La estandarización es más adecuada para algoritmos que asumen datos distribuidos normalmente o cuando los datos contienen valores atípicos.</p>
+<p>En la práctica, es esencial visualizar la distribución de los datos antes y después de aplicar técnicas de normalización. Esto ayuda a identificar el método más apropiado y a asegurar que los datos transformados cumplen con los supuestos del algoritmo de aprendizaje automático elegido.</p>
+</div>
+<hr>
+</section>
+</section>
+<section id="imputación-de-datos" class="level2">
+<h2 class="anchored" data-anchor-id="imputación-de-datos">4. Imputación de datos</h2>
+<div class="objective-card">
+<p>🎯 <strong>Objetivo:</strong> Aprender a rellenar valores faltantes en el conjunto de datos.</p>
+</div>
+<p><img src="_resources/images/missing.jpg" class="img-right img-fluid"></p>
+<p>Los valores faltantes son un problema común en conjuntos de datos reales. Pueden ocurrir por diversas razones, como errores de entrada de datos, fallos de equipos o encuestados que omiten preguntas en cuestionarios. Tratar los valores faltantes es crucial porque pueden llevar a resultados sesgados y reducir la efectividad de los modelos de aprendizaje automático. Hay varias estrategias para tratar los valores faltantes, incluyendo:</p>
+<ul>
+<li><strong>Eliminar filas o columnas</strong> con valores faltantes (si la cantidad de datos faltantes es pequeña).</li>
+<li><strong>Imputar valores faltantes</strong> usando medidas estadísticas (media, mediana, moda) o técnicas más avanzadas (por ejemplo, k vecinos más cercanos, regresión).</li>
+</ul>
+<p>La elección del método depende de la naturaleza de los datos y del grado de valores faltantes.</p>
+<section id="eliminación-de-valores-faltantes" class="level3">
+<h3 class="anchored" data-anchor-id="eliminación-de-valores-faltantes">4.1 Eliminación de valores faltantes</h3>
+<p>Primero, veamos cómo eliminar filas con valores faltantes. Usa el widget <strong>Impute</strong> para filtrar las filas que contienen cualquier valor faltante. Conecta la salida a un widget <strong>Data Table</strong> para visualizar el conjunto de datos limpio.</p>
+<div class="question-card">
+<p>📝 <strong>Preguntas:</strong> 1. ¿Cuántas filas se eliminaron debido a valores faltantes? 2. ¿Cuáles son los posibles inconvenientes de eliminar filas con valores faltantes?</p>
+</div>
+<!-- Solución
+1. El número de filas eliminadas dependerá del conjunto de datos específico. Puedes comprobar el número de filas antes y después de aplicar el filtro para determinar cuántas se eliminaron.
+2. Eliminar filas con valores faltantes puede llevar a la pérdida de información valiosa, especialmente si una parte significativa del conjunto de datos contiene valores faltantes. También puede introducir sesgo si la falta de datos no es aleatoria (por ejemplo, si ciertos grupos tienen más probabilidad de tener datos faltantes).
+-->
+</section>
+<section id="imputación-de-valores-faltantes" class="level3">
+<h3 class="anchored" data-anchor-id="imputación-de-valores-faltantes">4.2 Imputación de valores faltantes</h3>
+<p>En muchos casos, puede ser más apropiado imputar los valores faltantes en vez de eliminarlos. La imputación consiste en rellenar los valores faltantes con estimaciones basadas en los datos disponibles. Hay varios métodos para imputar valores faltantes, incluyendo:</p>
+<ul>
+<li><strong>Imputación por media/mediana/moda:</strong> Reemplazar los valores faltantes por la media, mediana o moda de la columna.</li>
+<li><strong>Imputación por k vecinos más cercanos (KNN):</strong> Usar los valores de los vecinos más cercanos para estimar los valores faltantes.</li>
+<li><strong>Imputación por regresión:</strong> Usar modelos de regresión para predecir y rellenar los valores faltantes en función de otras características.</li>
+</ul>
+<p>Usa el widget <strong>Impute</strong> para rellenar los valores faltantes. Puedes elegir diferentes métodos de imputación para diferentes columnas. Conecta la salida a un widget <strong>Data Table</strong> para visualizar el conjunto de datos imputado.</p>
+<div class="question-card">
+<p>📝 <strong>Preguntas:</strong></p>
+<ol type="1">
+<li>¿Cuáles son las ventajas y desventajas de usar métodos de imputación para tratar valores faltantes?</li>
+<li>¿Cómo puedes evaluar el impacto de la imputación en el conjunto de datos?</li>
+<li>¿En qué situaciones preferirías usar imputación en vez de simplemente eliminar los valores faltantes?</li>
+</ol>
+</div>
+<!-- Solución
+1. Las ventajas de la imputación incluyen preservar el tamaño del conjunto de datos y retener información valiosa. Las desventajas incluyen la posible introducción de sesgo si el método de imputación no refleja con precisión la distribución subyacente de los datos.
+2. Puedes evaluar el impacto de la imputación comparando las distribuciones de los conjuntos de datos original e imputado, así como evaluando el rendimiento de los modelos de aprendizaje automático entrenados con ambos conjuntos.
+3. La imputación se prefiere cuando la cantidad de datos faltantes es significativa y eliminar filas llevaría a una pérdida sustancial de información. También es útil cuando la falta de datos no es aleatoria y eliminar filas podría introducir sesgo.
+-->
+<hr>
+</section>
+</section>
+</section>
+<section id="mini-proyecto-preparando-datos-para-el-modelado" class="level1">
+<h1>Mini-proyecto: Preparando datos para el modelado</h1>
+<p>En este mini-proyecto, aplicarás los conceptos aprendidos en esta sesión para preprocesar un nuevo conjunto de datos.</p>
+<p><img src="_resources/images/car.jpg" class="img-right img-fluid"></p>
+<p>Imagina que acabas de unirte a un grupo de investigación que estudia la calidad de los automóviles y los precios de mercado. El equipo ha recopilado el conjunto de datos <strong>Imports 1985</strong> (disponible en el widget <strong>Datasets</strong>). La primera impresión puede ser que es rico y detallado. Sin embargo, una mirada más cercana revela varios problemas: algunos atributos contienen valores faltantes o inconsistentes (a menudo codificados como <code>?</code>), otros están medidos en escalas muy diferentes, y hay algunos casos extremos que podrían ser verdaderos valores atípicos del mercado o simples errores de registro. Además, algunas columnas numéricas pueden estar almacenadas como texto y no ser reconocidas correctamente como numéricas, y no todos los atributos disponibles son necesariamente relevantes para la tarea de predicción.</p>
+<p>Tu papel es diseñar un flujo de trabajo de preprocesamiento en Orange que transforme este conjunto de datos en uno confiable y listo para el modelado (por ejemplo, para predecir el <code>price</code> o construir un clasificador para <code>symboling</code>). Esto requerirá tomar decisiones sobre qué variables conservar, cómo tratar los datos incompletos, si ajustar o no las escalas de las variables y qué hacer con los valores inusuales. Una vez que hayas llegado a una versión del conjunto de datos que consideres adecuada, deberás asegurarte de que esté correctamente dividido en subconjuntos de entrenamiento y prueba para que los modelos futuros puedan evaluarse de manera justa.</p>
+<p>No existe una única secuencia de pasos correcta, y diferentes elecciones pueden llevar a resultados distintos. Lo importante es que pienses cuidadosamente en cada decisión y puedas justificar por qué trataste los datos de la manera en que lo hiciste.</p>
+</section>
+<section id="nota-final" class="level1">
+<h1>Nota final</h1>
+<div class="final-note-card">
+<p>✨ ¡Excelente trabajo! Has aprendido a preprocesar datos de manera efectiva, lo cual es un paso crucial en cualquier proyecto de aprendizaje automático. Al limpiar los datos, tratar los valores faltantes, normalizar las características y crear particiones adecuadas, has sentado una base sólida para construir modelos confiables.</p>
+<p>En la próxima sesión, verás cómo estas decisiones impactan el rendimiento de los modelos de aprendizaje supervisado. Recuerda guardar ambos flujos de trabajo (el original y el preprocesado) para que puedas comparar sus efectos.</p>
+</div>
+<div class="submission-card">
+<p><strong>📤 C&oacute;mo entregar</strong></p>
+<ul>
+<li>Guarda/exporta tu informe completado como PDF.</li>
+<li>Renombra el archivo PDF siguiendo la convenci&oacute;n de abajo.</li>
+<li>Ve a Aula Global &rarr; esta asignatura &rarr; Tareas &rarr; buz&oacute;n de entrega &ldquo;Lab 2&rdquo;, y sube el PDF antes de la fecha l&iacute;mite.</li>
+<li>Adjunta tambi&eacute;n tu archivo de flujo de trabajo de Orange (.ows, guardado con Archivo &gt; Guardar como&hellip; en Orange) en la misma entrega.</li>
+</ul>
+<p>Nombre del archivo: <span class="filename-example">Lab2_Apellido_Nombre.pdf</span> (ej. <span class="filename-example">Lab2_Garcia_Maria.pdf</span>)</p>
+</div>
+</section>
+<section id="explora-los-laboratorios" class="level1 unnumbered unlisted margin">
+<h1 class="unnumbered unlisted">Explora los Laboratorios</h1>
+<div class="lab-grid">
+  <a href="./lab1.es.html" class="lab-card">
+    <div class="card-inner">
+      <img src="_resources/images/lab1.jpg" alt="Lab 1">
+      <div class="overlay">
+        <div class="overlay-text">
+          <h3 class="anchored" data-anchor-id="explora-los-laboratorios">Laboratorio 1</h3>
+          <span class="subtitle">Introducción a Orange y Manejo de Datos</span>
+        </div>
+      </div>
+    </div>
+  </a>
+  <a href="./lab2.es.html" class="lab-card">
+    <div class="card-inner">
+      <img src="_resources/images/lab2.jpg" alt="Lab 2">
+      <div class="overlay">
+        <div class="overlay-text">
+          <h3 class="anchored">Laboratorio 2</h3>
+          <span class="subtitle">Preprocesamiento de Datos</span>
+        </div>
+      </div>
+    </div>
+  </a>
+  <a href="./lab3.es.html" class="lab-card">
+    <div class="card-inner">
+      <img src="_resources/images/lab3.jpg" alt="Lab 3">
+      <div class="overlay">
+        <div class="overlay-text">
+          <h3 class="anchored">Laboratorio 3</h3>
+          <span class="subtitle">Problemas de Regresión</span>
+        </div>
+      </div>
+    </div>
+  </a>
+  <a href="./lab4.es.html" class="lab-card">
+    <div class="card-inner">
+      <img src="_resources/images/lab4.jpg" alt="Lab 4">
+      <div class="overlay">
+        <div class="overlay-text">
+          <h3 class="anchored">Laboratorio 4</h3>
+          <span class="subtitle">Problemas de Clasificación</span>
+        </div>
+      </div>
+    </div>
+  </a>
+  <a href="./lab5.es.html" class="lab-card">
+    <div class="card-inner">
+      <img src="_resources/images/lab5.jpg" alt="Lab 5">
+      <div class="overlay">
+        <div class="overlay-text">
+          <h3 class="anchored">Laboratorio 5</h3>
+          <span class="subtitle">Aprendizaje No Supervisado</span>
+        </div>
+      </div>
+    </div>
+  </a>
+  <a href="./lab6.es.html" class="lab-card">
+    <div class="card-inner">
+      <img src="_resources/images/lab6.jpg" alt="Lab 6">
+      <div class="overlay">
+        <div class="overlay-text">
+          <h3 class="anchored">Laboratorio 6</h3>
+          <span class="subtitle">Sistemas de Recomendación</span>
+        </div>
+      </div>
+    </div>
+  </a>
+</div>
+</section>
+
+
+
+</main> <!-- /main -->
+<script>
+/* language.js — dedupe-safe version
+   If you include this as an external .js file, remove the <script> wrappers.
+*/
+
+let currentLang = localStorage.getItem("lang") || "en";
+
+// keep your existing labels object (trimmed here for brevity — keep your full object)
+const navbarLabels = {
+  en: {
+    title: "Computation and Intelligence",
+    home: "🏠 Home",
+    labs: "🔬 Labs",
+    labItems: ["Lab 1","Lab 2","Lab 3","Lab 4","Lab 5","Lab 6","Lab 7"],
+    setup: "🔧 Setup"
+  },
+  es: {
+    title: "Computación e Inteligencia",
+    home: "🏠 Inicio",
+    labs: "🔬 Laboratorios",
+    labItems: ["Laboratorio 1","Laboratorio 2","Laboratorio 3","Laboratorio 4","Laboratorio 5","Laboratorio 6","Laboratorio 7"],
+    setup: "🔧 Configuración"
+  }
+};
+
+// --- helper: consolidate/remove duplicate .navbar-brand elements ---
+function consolidateBrand() {
+  const brands = Array.from(document.querySelectorAll(".navbar-brand"));
+  if (brands.length <= 1) return brands[0] || null;
+
+  // Prefer the brand that contains an <img>, otherwise prefer the one with longest text
+  let preferred = brands.find(b => b.querySelector("img")) ||
+                  brands.reduce((a,b) => ( (a.textContent || "").length >= (b.textContent || "").length ? a : b ));
+
+  // If any duplicate has useful href and preferred doesn't, copy it
+  brands.forEach((b) => {
+    if (b === preferred) return;
+    try {
+      if (!preferred.getAttribute("href") && b.getAttribute("href")) {
+        preferred.setAttribute("href", b.getAttribute("href"));
+      }
+      // Remove duplicate from DOM
+      b.remove();
+    } catch (e) {
+      // ignore removal errors
+      console.warn("brand dedupe: couldn't remove a duplicate", e);
+    }
+  });
+
+  return preferred;
+}
+
+// Watch for later DOM changes that might re-insert duplicates (Quarto or other scripts)
+function observeBrandDedupe() {
+  const root = document.querySelector("nav") || document.body;
+  if (!root) return;
+  const observer = new MutationObserver((mutations) => {
+    for (const m of mutations) {
+      if (m.addedNodes && m.addedNodes.length) {
+        // If any added node contains .navbar-brand, run consolidation
+        for (const node of m.addedNodes) {
+          if (node.nodeType !== 1) continue;
+          if (node.matches && node.matches(".navbar-brand")) {
+            consolidateBrand();
+            return;
+          }
+          if (node.querySelector && node.querySelector(".navbar-brand")) {
+            consolidateBrand();
+            return;
+          }
+        }
+      }
+    }
+  });
+  observer.observe(root, { childList: true, subtree: true });
+}
+
+// --- update functions (use consolidated brand) ---
+function updateNavbarText(lang) {
+  document.title = navbarLabels[lang].title;
+
+  // Ensure single brand element
+  const brand = consolidateBrand() || document.querySelector(".navbar-brand");
+  if (brand) {
+    const img = brand.querySelector("img");
+    if (img) {
+      img.alt = navbarLabels[lang].title;
+    } else {
+      brand.textContent = navbarLabels[lang].title;
+    }
+  }
+
+  // Home link
+  const homeLink =
+      document.querySelector(".navbar .navbar-nav.me-auto > li:nth-child(1) > a") ||
+      document.querySelector(".navbar .navbar-nav:not(.ms-auto) > li:nth-child(1) > a");
+  if (homeLink) homeLink.textContent = navbarLabels[lang].home;
+
+  // Setup link
+  const setupLink =
+      document.querySelector(".navbar .navbar-nav.me-auto > li:nth-child(2) > a") ||
+      document.querySelector(".navbar .navbar-nav:not(.ms-auto) > li:nth-child(2) > a");
+  if (setupLink) setupLink.textContent = navbarLabels[lang].setup;
+
+  // Labs dropdown toggle
+  const labsToggle =
+      document.querySelector(".navbar .navbar-nav.me-auto > li:nth-child(3) > a[data-bs-toggle='dropdown']") ||
+      document.querySelector(".navbar .navbar-nav:not(.ms-auto) > li:nth-child(3) > a[data-bs-toggle='dropdown']");
+  if (labsToggle) labsToggle.textContent = navbarLabels[lang].labs;
+
+  // Labs dropdown items
+  const labLinks = document.querySelectorAll(".navbar .dropdown-menu a.dropdown-item");
+  labLinks.forEach((link, i) => {
+    if (navbarLabels[lang].labItems[i]) {
+      link.textContent = navbarLabels[lang].labItems[i];
+    }
+  });
+}
+
+function updatedURL(lang, url) {
+  if (url.endsWith("/") || url.endsWith("index.html")) {
+    if (lang === "es") url = url.replace("index.html", "index.es.html");
+    else if (url.endsWith("index.es.html")) url = url.replace("index.es.html", "index.html");
+  } else if (url.includes(".es.html")) {
+    if (lang === "en") url = url.replace(".es.html", ".html");
+  } else if (url.endsWith(".html")) {
+    if (lang === "es") url = url.replace(".html", ".es.html");
+  }
+  return url;
+}
+
+function updateNavbarHref(lang) {
+  const brand = consolidateBrand() || document.querySelector(".navbar-brand");
+  if (brand) {
+    let href = brand.getAttribute("href");
+    if (href) brand.setAttribute("href", updatedURL(lang, href));
+  }
+
+  const homeLink =
+      document.querySelector(".navbar .navbar-nav.me-auto > li:nth-child(1) > a") ||
+      document.querySelector(".navbar .navbar-nav:not(.ms-auto) > li:nth-child(1) > a");
+  if (homeLink) {
+    let href = homeLink.getAttribute("href");
+    if (href) homeLink.setAttribute("href", updatedURL(lang, href));
+  }
+
+  const setupLink =
+      document.querySelector(".navbar .navbar-nav.me-auto > li:nth-child(2) > a") ||
+      document.querySelector(".navbar .navbar-nav:not(.ms-auto) > li:nth-child(2) > a");
+  if (setupLink) {
+    let href = setupLink.getAttribute("href");
+    if (href) setupLink.setAttribute("href", updatedURL(lang, href));
+  }
+
+  const labsToggle =
+      document.querySelector(".navbar .navbar-nav.me-auto > li:nth-child(3) > a[data-bs-toggle='dropdown']") ||
+      document.querySelector(".navbar .navbar-nav:not(.ms-auto) > li:nth-child(3) > a[data-bs-toggle='dropdown']");
+  if (labsToggle) {
+    let href = labsToggle.getAttribute("href");
+    if (href) labsToggle.setAttribute("href", updatedURL(lang, href));
+  }
+
+  const labLinks = document.querySelectorAll(".navbar .dropdown-menu a.dropdown-item");
+  labLinks.forEach((link) => {
+    let href = link.getAttribute("href");
+    if (href) link.setAttribute("href", updatedURL(lang, href));
+  });
+}
+
+function switchLang() {
+  let url = window.location.href;
+  let hash = window.location.hash;
+  let targetLang = (currentLang === "es") ? "en" : "es";
+  localStorage.setItem("lang", targetLang);
+  currentLang = targetLang;
+  url = url.replace(hash, "");
+  if (url.endsWith("/") || url.endsWith("index.html")) {
+    if (targetLang === "es") url = url.replace("index.html", "index.es.html");
+  } else if (url.endsWith("index.es.html")) {
+    if (targetLang === "en") url = url.replace("index.es.html", "index.html");
+  } else if (url.includes(".es.html")) {
+    if (targetLang === "en") url = url.replace(".es.html", ".html");
+  } else if (url.endsWith(".html")) {
+    if (targetLang === "es") url = url.replace(".html", ".es.html");
+  }
+  window.location.href = url + hash;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  // First dedupe immediately
+  consolidateBrand();
+
+  // Observe for later re-renders
+  observeBrandDedupe();
+
+  updateNavbarText(currentLang);
+  updateNavbarHref(currentLang);
+
+  const switcher = document.querySelector("a[href='javascript:void(0)']");
+  if (switcher) {
+    switcher.style.cursor = "pointer";
+    switcher.addEventListener("click", (e) => {
+      e.preventDefault();
+      switchLang();
+    });
+  }
+
+  // If root, redirect to saved language
+  if (window.location.pathname.endsWith("/") || window.location.pathname.endsWith("/Computation_and_Intelligence/")) {
+    let saved = localStorage.getItem("lang") || "en";
+    if (saved === "es") window.location.href = "index.es.html";
+    else window.location.href = "index.html";
+  }
+});
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/sevisal\.github\.io\/Computation_and_Intelligence\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© 2025 Carlos Sevilla Salcedo</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

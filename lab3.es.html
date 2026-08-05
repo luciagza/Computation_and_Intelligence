@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Sesión de laboratorio 3: Problemas de Regresión – Computation and Intelligence</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./favicon.ico" rel="icon">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-82aba43ae7933661fba683bbc771ca3c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Computation and Intelligence</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">🏠 Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./setup.html"> 
+<span class="menu-text">🔧 Setup</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-labs" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">🔬 Labs</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-labs">    
+        <li>
+    <a class="dropdown-item" href="./lab1.html">
+ <span class="dropdown-text">Lab 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./lab2.html">
+ <span class="dropdown-text">Lab 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./lab3.html">
+ <span class="dropdown-text">Lab 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./lab4.html">
+ <span class="dropdown-text">Lab 4</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./lab5.html">
+ <span class="dropdown-text">Lab 5</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./lab6.html">
+ <span class="dropdown-text">Lab 6</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="javascript:void(0)"> 
+<span class="menu-text">🌐</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title"><strong>Contenido</strong></h2>
+   
+  <ul>
+  <li><a href="#objetivos-de-la-sesión" id="toc-objetivos-de-la-sesión" class="nav-link active" data-scroll-target="#objetivos-de-la-sesión">Objetivos de la sesión</a></li>
+  <li><a href="#actividades-propuestas" id="toc-actividades-propuestas" class="nav-link" data-scroll-target="#actividades-propuestas">Actividades propuestas</a>
+  <ul>
+  <li><a href="#regresión-lineal" id="toc-regresión-lineal" class="nav-link" data-scroll-target="#regresión-lineal">1. Regresión lineal</a></li>
+  <li><a href="#evaluación-del-rendimiento-del-modelo" id="toc-evaluación-del-rendimiento-del-modelo" class="nav-link" data-scroll-target="#evaluación-del-rendimiento-del-modelo">2. Evaluación del rendimiento del modelo</a></li>
+  <li><a href="#regularización" id="toc-regularización" class="nav-link" data-scroll-target="#regularización">3. Regularización</a>
+  <ul>
+  <li><a href="#regularización-frente-al-sobreajuste" id="toc-regularización-frente-al-sobreajuste" class="nav-link" data-scroll-target="#regularización-frente-al-sobreajuste">3.1. Regularización frente al sobreajuste</a></li>
+  <li><a href="#validación-cruzada-para-sintonizar-hiperparámetros" id="toc-validación-cruzada-para-sintonizar-hiperparámetros" class="nav-link" data-scroll-target="#validación-cruzada-para-sintonizar-hiperparámetros">3.2. Validación cruzada para sintonizar hiperparámetros</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#mini-proyecto-problemas-de-regresión-y-regularización" id="toc-mini-proyecto-problemas-de-regresión-y-regularización" class="nav-link" data-scroll-target="#mini-proyecto-problemas-de-regresión-y-regularización">Mini-proyecto: Problemas de regresión y regularización</a></li>
+  <li><a href="#nota-final" id="toc-nota-final" class="nav-link" data-scroll-target="#nota-final">Nota final</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content column-page-right" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Sesión de laboratorio 3: Problemas de Regresión</h1>
+</div>
+
+
+
+<div class="quarto-title-meta column-page-right">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="objetivos-de-la-sesión" class="level1">
+<h1>Objetivos de la sesión</h1>
+<div class="objective-card">
+<p>🎯 <strong>Objetivo general:</strong> Entender el modelado de regresión para que podamos construir predictores que generalicen bien y produzcan estimaciones fiables e interpretables.</p>
+</div>
+<p><img src="_resources/images/Regression.jpg" class="img-right img-fluid"> En problemas aplicados, la calidad de un modelo de regresión depende no solo del algoritmo, sino de cómo planteamos el problema, preparamos las entradas y evaluamos los resultados. Incluso un modelo lineal simple puede fallar estrepitosamente si los predictores están en escalas muy diferentes, si algunas variables son colineales o si puntos influyentes dominan el ajuste. El preprocesamiento para regresión, por tanto, incluye los pasos habituales de limpieza y escalado, además de un análisis diagnóstico de los supuestos del modelo (linealidad, homocedasticidad, independencia de los errores) y de la influencia de valores atípicos y puntos con alto apalancamiento.</p>
+<p>Esta sesión desarrollará una intuición sobre estos problemas y mostrará cómo afectan tanto a la predicción como a la interpretación. Examinaremos el comportamiento de los mínimos cuadrados ordinarios, aprenderemos por qué y cuándo la regularización (Ridge y LASSO) es útil, y practicaremos la selección de hiperparámetros mediante validación cruzada. También aprenderás qué métricas son apropiadas para diferentes objetivos (precisión de predicción vs.&nbsp;robustez vs.&nbsp;interpretabilidad) y cómo comparar modelos sin procesar, de referencia y regularizados en datos reservados.</p>
+<p>Dominar estas ideas te ayudará a evitar errores comunes —sobreajuste, fuga de datos (data leakage), valores de R^2 engañosos, manejo deficiente de la multicolinealidad y estimaciones de coeficientes con exceso de confianza—, de modo que tus análisis de regresión sean precisos y fiables.</p>
+<hr>
+</section>
+<section id="actividades-propuestas" class="level1">
+<h1>Actividades propuestas</h1>
+<p>A lo largo de estas actividades trabajarás con el conjunto de datos <strong>California Housing</strong>. Este conjunto contiene información sobre los valores de las viviendas en distritos de California durante el censo de 1990, e incluye atributos demográficos y geográficos como ingreso medio, número medio de habitaciones y densidad de población. Es un conjunto de referencia para tareas de regresión, donde el objetivo es predecir el <strong>valor medio de la vivienda</strong> a partir de las demás variables.</p>
+<p><img src="_resources/images/Housing.jpeg" class="img-center img-fluid"></p>
+<p>Puedes descargar el conjunto en formato CSV desde <a href="https://raw.githubusercontent.com/ageron/handson-ml/master/datasets/housing/housing.csv">este enlace</a> (si lo abres en el navegador, haz clic derecho y selecciona “Guardar como…” para descargarlo). Una explicación de cada atributo está disponible en la <a href="https://scikit-learn.org/stable/datasets/real_world.html#california-housing-dataset">documentación de scikit-learn</a>.</p>
+<p>Carga el conjunto de datos en Orange y selecciona la variable objetivo para nuestro problema (<code>median_house_value</code>). Una vez que esté disponible en tu flujo de trabajo, la usaremos para explorar el comportamiento de la regresión lineal, estudiar los riesgos del sobreajuste y entender cómo las <strong>técnicas de regularización</strong> y la <strong>validación cruzada</strong> pueden mejorar el rendimiento del modelo. Como aprendimos la semana pasada, es crucial dividir los datos en conjuntos de entrenamiento y prueba para evaluar el rendimiento en datos no vistos.</p>
+<section id="regresión-lineal" class="level2">
+<h2 class="anchored" data-anchor-id="regresión-lineal">1. Regresión lineal</h2>
+<div class="objective-card">
+<p>🎯 <strong>Objetivo:</strong> Ajustar e interpretar un modelo de regresión lineal, y comprender sus supuestos y limitaciones.</p>
+</div>
+<p><img src="_resources/images/LR.jpg" class="img-right img-fluid"> La regresión lineal es el enfoque más sencillo para modelar resultados continuos. Asume una relación lineal entre los predictores (features) y la variable objetivo. Aunque es fácil de ajustar e interpretar, su fiabilidad depende de cuánto cumplan los datos ciertos supuestos: linealidad, independencia de los errores, homocedasticidad (varianza constante) y ausencia de multicolinealidad fuerte entre los predictores.</p>
+<p>La idea de la regresión lineal es encontrar los coeficientes (pesos) para cada predictor que minimicen la suma de los cuadrados de las diferencias entre los valores observados y los predichos. Esto se conoce como el método de <strong>Mínimos Cuadrados Ordinarios (OLS)</strong> y tiene la siguiente formulación matemática: <span class="math display">\[
+\min_{\mathbf{w}} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
+\]</span> donde <span class="math inline">\(y_i\)</span> es el valor real, <span class="math inline">\(\hat{y}_i\)</span> es el valor predicho, <span class="math inline">\(\mathbf{w}\)</span> es el vector de coeficientes y <span class="math inline">\(\mathbf{x}_i\)</span> es el vector de características para la observación <span class="math inline">\(i\)</span>.</p>
+<p>En Orange, puedes usar el widget <code>Linear Regression</code> para construir un modelo que prediga el valor de las viviendas a partir de los atributos de entrada. El widget también permite inspeccionar los coeficientes de cada predictor haciendo clic en la parte inferior de la ventana; estos indican el cambio estimado en la variable objetivo por un cambio de una unidad en la característica (manteniendo las demás constantes). Para observar mejor los coeficientes puedes usar el widget <code>Bar Plot</code> para visualizarlos.</p>
+<p>Recuerda que coeficientes grandes pueden ser una señal de multicolinealidad o sobreajuste.</p>
+<p>Repite el proceso usando el widget <code>Continuize</code> para estandarizar las características antes de ajustar el modelo. ¿Observas cambios en los coeficientes?</p>
+<div class="question-card">
+<p>📝 <strong>Preguntas:</strong></p>
+<ol type="1">
+<li>¿Qué variables parecen tener el efecto más fuerte sobre los precios de la vivienda según los coeficientes de regresión?</li>
+<li>¿Podemos usar estos coeficientes para evaluar la importancia de las variables? ¿Por qué sí o por qué no?</li>
+<li>¿Observas coeficientes inusualmente grandes o inestables? ¿Qué podría indicar esto?</li>
+</ol>
+</div>
+<!-- Solution 3. 
+1. Median income is usually the strongest predictor, followed by average number of rooms. 
+2. Only if the features are on the same scale and there is no multicollinearity. Standardizing helps with this.
+3. Yes, some variables show large coefficients, which may indicate multicollinearity or poor scaling. 
+-->
+<hr>
+</section>
+<section id="evaluación-del-rendimiento-del-modelo" class="level2">
+<h2 class="anchored" data-anchor-id="evaluación-del-rendimiento-del-modelo">2. Evaluación del rendimiento del modelo</h2>
+<div class="objective-card">
+<p>🎯 <strong>Objetivo:</strong> Entender las distintas métricas para evaluar el rendimiento de un modelo.</p>
+</div>
+<p><img src="_resources/images/performance.gif" class="img-right img-fluid"> Al evaluar un modelo de regresión, es crucial medir su desempeño en datos no vistos para asegurar que generalice bien. Normalmente se divide el conjunto en entrenamiento y prueba: el primero se usa para ajustar el modelo y el segundo para evaluarlo.</p>
+<p>En Orange puedes usar el widget <code>Predictions</code> para evaluar el rendimiento de tu modelo de regresión. Este widget ofrece varias métricas, entre ellas:</p>
+<ul>
+<li><p><strong>Error cuadrático medio (MSE):</strong> El promedio de los cuadrados de las diferencias entre los valores predichos y los reales. Penaliza más los errores grandes que el MAE, por lo que es sensible a valores atípicos. Se calcula como: <span class="math display">\[
+MSE = \frac{1}{N} \sum_{n=1}^{N} (y_n - \hat{y}_n)^2
+\]</span> donde <span class="math inline">\(y_n\)</span> es el valor real, <span class="math inline">\(\hat{y}_n\)</span> es el valor predicho y <span class="math inline">\(N\)</span> es el número de observaciones.</p></li>
+<li><p><strong>Raíz del error cuadrático medio (RMSE):</strong> La raíz cuadrada del MSE, proporcionando una métrica de error en las mismas unidades de la variable objetivo. Se calcula como: <span class="math display">\[
+RMSE = \sqrt{MSE} = \sqrt{\frac{1}{N} \sum_{n=1}^{N} (y_n - \hat{y}_n)^2}
+\]</span></p></li>
+<li><p><strong>Error absoluto medio (MAE):</strong> El promedio de las diferencias absolutas entre los valores predichos y los reales. Da una idea de cuánto se desvían las predicciones, en promedio. Se calcula como: <span class="math display">\[
+MAE = \frac{1}{N} \sum_{n=1}^{N} |y_n - \hat{y}_n|
+\]</span></p></li>
+<li><p><strong>Error porcentual absoluto medio (MAPE):</strong> El promedio del porcentaje absoluto de la diferencia entre predicción y realidad. Es útil para entender el error en términos relativos, especialmente cuando la variable objetivo tiene un rango amplio. Se calcula como: <span class="math display">\[
+MAPE = \frac{100\%}{N} \sum_{n=1}^{N} \left| \frac{y_n - \hat{y}_n}{y_n} \right|
+\]</span></p></li>
+<li><p><strong>R-cuadrado (<span class="math inline">\(R^2\)</span>):</strong> La proporción de la varianza de la variable objetivo que es explicada por el modelo. Varía entre 0 y 1 (aunque puede ser negativo para modelos muy malos), siendo valores más altos indicativos de mejor ajuste. Se calcula como: <span class="math display">\[
+R^2 = 1 - \frac{\sum_{n=1}^{N} (y_n - \hat{y}_n)^2}{\sum_{n=1}^{N} (y_n - \bar{y})^2}
+\]</span> donde <span class="math inline">\(\bar{y}\)</span> es la media de los valores reales.</p></li>
+</ul>
+<p>Usa el widget <code>Predictions</code> para evaluar tu modelo de regresión lineal sobre el conjunto de prueba. Conecta la salida del widget <code>Linear Regression</code> al widget <code>Predictions</code>, y conecta también la salida del <code>Data Sampler</code> (conjunto de prueba) al <code>Predictions</code>. Explora las diferentes métricas que proporciona el widget <code>Predictions</code>. Compara los resultados con y sin estandarizar las características usando el widget <code>Continuize</code>.</p>
+<p>Traza los valores predichos frente a los reales con el widget <code>Scatter Plot</code> para visualizar el rendimiento del modelo. Puedes activar la opción “Show regression line” en el <code>Scatter Plot</code> para ver qué tan bien se alinean las predicciones con los valores reales.</p>
+<div class="question-card">
+<p>📝 <strong>Preguntas:</strong></p>
+<ol type="1">
+<li>¿Qué métrica de evaluación crees que es más apropiada para este problema de regresión? ¿Por qué?</li>
+<li>¿Cómo afecta la estandarización de las características al rendimiento del modelo?</li>
+<li>Según el diagrama de dispersión, ¿qué tan bien captura el modelo la relación entre las características y la variable objetivo?</li>
+</ol>
+</div>
+<!-- Solución
+1. RMSE suele preferirse porque entrega el error en las mismas unidades que la variable objetivo y penaliza más los errores grandes que el MAE.
+2. En teoría, la regresión lineal no es sensible al escalado de las características en cuanto a predicción; sin embargo, la estandarización puede mejorar la estabilidad numérica y hacer más interpretable los coeficientes.
+3. El diagrama de dispersión debería mostrar una relación cercana a la diagonal si el modelo captura bien la relación, aunque pueden observarse desviaciones especialmente en valores extremos.
+-->
+<hr>
+</section>
+<section id="regularización" class="level2">
+<h2 class="anchored" data-anchor-id="regularización">3. Regularización</h2>
+<div class="objective-card">
+<p>🎯 <strong>Objetivo:</strong> Explorar los efectos de las técnicas de regularización en el rendimiento del modelo y la diferencia entre <span class="math inline">\(\ell_1\)</span> y <span class="math inline">\(\ell_2\)</span>.</p>
+</div>
+<p><img src="_resources/images/generalisation.jpg" class="img-right img-fluid"> Hemos visto que la regresión lineal puede ser sensible a la multicolinealidad y al sobreajuste, especialmente cuando hay muchos predictores. Las técnicas de regularización, como Ridge (regularización <span class="math inline">\(\ell_2\)</span>) y LASSO (regularización <span class="math inline">\(\ell_1\)</span>), ayudan a mitigar estos problemas añadiendo un término de penalización a la función de pérdida. Esto incentiva modelos más simples que generalizan mejor a datos no vistos.</p>
+<p>En Ridge, el término de penalización es la suma de los cuadrados de los coeficientes, mientras que en LASSO es la suma de los valores absolutos de los coeficientes. Las formulaciones matemáticas son:</p>
+<ul>
+<li><strong>Ridge Regression:</strong> <span class="math display">\[
+L_{Ridge}(\mathbf{w}) = \sum_{i=1}^{N} (y_i - \hat{y}_i)^2 + \lambda \sum_{j=1}^{M} w_j^2
+\]</span></li>
+<li><strong>LASSO Regression:</strong> <span class="math display">\[
+L_{LASSO}(\mathbf{w}) = \sum_{i=1}^{N} (y_i - \hat{y}_i)^2 + \lambda \sum_{j=1}^{M} |w_j|
+\]</span></li>
+</ul>
+<p>donde <span class="math inline">\(\lambda\)</span> es el parámetro de regularización que controla la intensidad de la penalización, <span class="math inline">\(M\)</span> es el número de predictores y <span class="math inline">\(w_j\)</span> son los coeficientes.</p>
+<p>En Orange puedes usar las opciones <code>Ridge Regression</code> y <code>Lasso Regression</code> en el widget <code>Linear Regression</code> para ajustar modelos con estas técnicas. Experimenta con diferentes valores del parámetro de regularización <span class="math inline">\(\lambda\)</span> (a menudo llamado alpha en los widgets) para ver cómo afectan a los coeficientes y al rendimiento del modelo.</p>
+<section id="regularización-frente-al-sobreajuste" class="level3">
+<h3 class="anchored" data-anchor-id="regularización-frente-al-sobreajuste">3.1. Regularización frente al sobreajuste</h3>
+<p><img src="_resources/images/copy.gif" class="img-right img-fluid"> Para ilustrar los efectos de la regularización, crearemos un conjunto de datos sintético con características repetidas que pueden inducir sobreajuste. Puedes descargar el conjunto con características repetidas de <code>MedInc</code> en el siguiente enlace: <a href="https://github.com/sevisal/Computation_and_Intelligence/raw/main/_resources/data/california_housing_data_rep.csv">Descargar conjunto con características redundantes</a>.</p>
+<p>Carga el conjunto en Orange y ajusta un modelo de regresión lineal sin regularización. Observa los coeficientes y el rendimiento del modelo en el conjunto de prueba usando el widget <code>Test &amp; Score</code>. Luego ajusta modelos Ridge y LASSO con distintos valores de <span class="math inline">\(\lambda\)</span> y compara sus coeficientes y rendimiento.</p>
+<div class="question-card">
+<p>📝 <strong>Preguntas:</strong></p>
+<ol type="1">
+<li>¿Cómo cambian los coeficientes con distintos valores de <span class="math inline">\(\lambda\)</span> para Ridge y LASSO?</li>
+<li>¿Qué técnica de regularización parece funcionar mejor en este escenario? ¿Por qué?</li>
+<li>¿Cómo ayuda la regularización a mitigar el sobreajuste en este caso?</li>
+</ol>
+</div>
+<!-- Solución
+1. A medida que $\lambda$ aumenta, los coeficientes en Ridge y LASSO tienden a reducirse hacia cero. LASSO puede llevar algunos coeficientes exactamente a cero, realizando selección de variables.
+2. LASSO puede funcionar mejor en este escenario porque puede eliminar características redundantes poniendo sus coeficientes a cero, produciendo un modelo más simple.
+3. La regularización penaliza coeficientes grandes, desalentando que el modelo ajuste ruido en los datos de entrenamiento y mejorando la generalización a datos no vistos.
+-->
+</section>
+<section id="validación-cruzada-para-sintonizar-hiperparámetros" class="level3">
+<h3 class="anchored" data-anchor-id="validación-cruzada-para-sintonizar-hiperparámetros">3.2. Validación cruzada para sintonizar hiperparámetros</h3>
+<div class="objective-card">
+<p>🎯 <strong>Objetivo:</strong> Usar validación cruzada para seleccionar el parámetro de regularización <span class="math inline">\(\lambda\)</span> óptimo para Ridge y LASSO.</p>
+</div>
+<p>En esta sección trabajaremos con un escenario de alta dimensionalidad con características polinomiales. Puedes descargar el conjunto con características polinomiales desde: <a href="https://github.com/sevisal/Computation_and_Intelligence/raw/main/_resources/data/california_housing_data_poly.csv">Descargar conjunto polinomial</a>.</p>
+<p>Elegir el valor correcto de <span class="math inline">\(\lambda\)</span> es crucial para balancear sesgo y varianza. Un enfoque común es usar validación cruzada: particionar los datos de entrenamiento en varios pliegues, entrenar el modelo en algunos pliegues y validar en el resto, repitiendo esto para distintos valores de <span class="math inline">\(\lambda\)</span> y seleccionando el que minimice el error medio en las validaciones.</p>
+<p><img src="_resources/images/crowded.gif" class="img-right img-fluid"> En Orange puedes usar el widget <code>Test &amp; Score</code> con validación cruzada para evaluar el rendimiento de Ridge y LASSO con distintos valores de $. Orange no dispone de un sintonizador de hiperparámetros automático, por lo que deberás crear un widget <code>Linear Regression</code> por cada valor de $y conectarlos al <code>Test &amp; Score</code>. Asegúrate de incluir el widget de <code>Preprocessing</code> con la opción <code>Standardize</code> y pasarlo también al <code>Test &amp; Score</code> para que la estandarización se haga dentro de cada pliegue y evitar fuga de datos.</p>
+<p>Encuentra el valor óptimo de <span class="math inline">\(\lambda\)</span> para Ridge y LASSO comparando su rendimiento en los pliegues de validación. Una vez seleccionado el mejor <span class="math inline">\(\lambda\)</span>, ajusta el modelo final con el conjunto de entrenamiento completo y evalúa su rendimiento en el conjunto de prueba.</p>
+<div class="question-card">
+<p>📝 <strong>Preguntas:</strong></p>
+<ol type="1">
+<li>¿Cuál es el valor óptimo de <span class="math inline">\(\lambda\)</span> para Ridge y LASSO según la validación cruzada?</li>
+<li>¿Cómo compara el rendimiento de los modelos finales con el modelo de regresión lineal sin regularización?</li>
+<li>¿Cómo ayuda la validación cruzada a seleccionar el parámetro de regularización y mejorar la generalización del modelo?</li>
+</ol>
+</div>
+<!-- Solución
+1. El valor óptimo de $\lambda$ depende del conjunto de datos y los resultados de la validación cruzada; típicamente es el que minimiza el error medio de validación.
+2. Los modelos finales con regularización deberían tener mejor rendimiento en el conjunto de prueba que el modelo sin regularización, al reducir el sobreajuste.
+3. La validación cruzada proporciona una estimación más robusta del rendimiento al evaluar el modelo en múltiples particiones, ayudando a elegir un $\lambda$ que generalice bien.
+-->
+<hr>
+</section>
+</section>
+</section>
+<section id="mini-proyecto-problemas-de-regresión-y-regularización" class="level1">
+<h1>Mini-proyecto: Problemas de regresión y regularización</h1>
+<p>En este mini-proyecto aplicarás lo aprendido sobre preprocesamiento y regularización en regresión.</p>
+<p><img src="_resources/images/energy.jpg" class="img-right img-fluid"></p>
+<p>Imagina que te unes a una iniciativa de investigación sobre arquitectura sostenible. El equipo trabaja con el conjunto de datos <strong>Energy Efficiency</strong> (disponible en el siguiente <a href="https://www.kaggle.com/datasets/elikplim/eergy-efficiency-dataset/download">enlace</a>). Contiene parámetros de edificios como área de muros, área de techo y área de acristalamiento, junto con dos variables objetivo: la carga de calefacción y la carga de refrigeración requerida para cada diseño. Para este ejercicio, debes <strong>elegir una de las dos variables objetivo</strong> para predecir. Parte de tu tarea es justificar por qué seleccionaste esa variable y cómo afecta tus decisiones de modelado.</p>
+<p>El conjunto plantea varios retos útiles: varias variables están en escalas distintas, lo que puede distorsionar la influencia de los predictores si no se ajusta; además hay fuertes correlaciones entre entradas que pueden producir inestabilidad en modelos lineales. Estos problemas subrayan la importancia del preprocesamiento y la regularización.</p>
+<p>Tu tarea es diseñar un flujo de trabajo en Orange que prepare este conjunto para modelado y luego construya un modelo de regresión lineal regularizado. Esto incluirá decisiones sobre transformaciones, si normalizar o estandarizar variables y cómo manejar predictores correlacionados. Después de preparar los datos, entrenarás un modelo con regularización, validarás la elección del parámetro de regularización mediante validación cruzada y finalmente evaluarás su rendimiento en un conjunto de prueba reservado.</p>
+<p>No hay una única solución correcta. Lo importante es que puedas explicar y justificar tus decisiones.</p>
+</section>
+<section id="nota-final" class="level1">
+<h1>Nota final</h1>
+<div class="final-note-card">
+<p>✨ ¡Felicidades por completar el Laboratorio 3! Has explorado los fundamentos del análisis de regresión, incluyendo ajuste de modelos lineales, evaluación de su rendimiento y aplicación de regularización para mejorar la generalización.</p>
+<p>En la próxima sesión profundizarás en problemas de clasificación, aprendiendo a construir modelos que categorizan datos en clases distintas. Veremos diferentes algoritmos, métricas de rendimiento y estrategias para manejar conjuntos desbalanceados. ¡Disfruta el viaje en el mundo del aprendizaje automático! 🚀</p>
+</div>
+<div class="submission-card">
+<p><strong>📤 C&oacute;mo entregar</strong></p>
+<ul>
+<li>Guarda/exporta tu informe completado como PDF.</li>
+<li>Renombra el archivo PDF siguiendo la convenci&oacute;n de abajo.</li>
+<li>Ve a Aula Global &rarr; esta asignatura &rarr; Tareas &rarr; buz&oacute;n de entrega &ldquo;Lab 3&rdquo;, y sube el PDF antes de la fecha l&iacute;mite.</li>
+<li>Adjunta tambi&eacute;n tu archivo de flujo de trabajo de Orange (.ows, guardado con Archivo &gt; Guardar como&hellip; en Orange) en la misma entrega.</li>
+</ul>
+<p>Nombre del archivo: <span class="filename-example">Lab3_Apellido_Nombre.pdf</span> (ej. <span class="filename-example">Lab3_Garcia_Maria.pdf</span>)</p>
+</div>
+</section>
+<section id="explora-los-laboratorios" class="level1 unnumbered unlisted margin">
+<h1 class="unnumbered unlisted">Explora los Laboratorios</h1>
+<div class="lab-grid">
+  <a href="./lab1.es.html" class="lab-card">
+    <div class="card-inner">
+      <img src="_resources/images/lab1.jpg" alt="Lab 1">
+      <div class="overlay">
+        <div class="overlay-text">
+          <h3 class="anchored" data-anchor-id="explora-los-laboratorios">Laboratorio 1</h3>
+          <span class="subtitle">Introducción a Orange y Manejo de Datos</span>
+        </div>
+      </div>
+    </div>
+  </a>
+  <a href="./lab2.es.html" class="lab-card">
+    <div class="card-inner">
+      <img src="_resources/images/lab2.jpg" alt="Lab 2">
+      <div class="overlay">
+        <div class="overlay-text">
+          <h3 class="anchored">Laboratorio 2</h3>
+          <span class="subtitle">Preprocesamiento de Datos</span>
+        </div>
+      </div>
+    </div>
+  </a>
+  <a href="./lab3.es.html" class="lab-card">
+    <div class="card-inner">
+      <img src="_resources/images/lab3.jpg" alt="Lab 3">
+      <div class="overlay">
+        <div class="overlay-text">
+          <h3 class="anchored">Laboratorio 3</h3>
+          <span class="subtitle">Problemas de Regresión</span>
+        </div>
+      </div>
+    </div>
+  </a>
+  <a href="./lab4.es.html" class="lab-card">
+    <div class="card-inner">
+      <img src="_resources/images/lab4.jpg" alt="Lab 4">
+      <div class="overlay">
+        <div class="overlay-text">
+          <h3 class="anchored">Laboratorio 4</h3>
+          <span class="subtitle">Problemas de Clasificación</span>
+        </div>
+      </div>
+    </div>
+  </a>
+  <a href="./lab5.es.html" class="lab-card">
+    <div class="card-inner">
+      <img src="_resources/images/lab5.jpg" alt="Lab 5">
+      <div class="overlay">
+        <div class="overlay-text">
+          <h3 class="anchored">Laboratorio 5</h3>
+          <span class="subtitle">Aprendizaje No Supervisado</span>
+        </div>
+      </div>
+    </div>
+  </a>
+  <a href="./lab6.es.html" class="lab-card">
+    <div class="card-inner">
+      <img src="_resources/images/lab6.jpg" alt="Lab 6">
+      <div class="overlay">
+        <div class="overlay-text">
+          <h3 class="anchored">Laboratorio 6</h3>
+          <span class="subtitle">Sistemas de Recomendación</span>
+        </div>
+      </div>
+    </div>
+  </a>
+</div>
+</section>
+
+
+
+</main> <!-- /main -->
+<script>
+/* language.js — dedupe-safe version
+   If you include this as an external .js file, remove the <script> wrappers.
+*/
+
+let currentLang = localStorage.getItem("lang") || "en";
+
+// keep your existing labels object (trimmed here for brevity — keep your full object)
+const navbarLabels = {
+  en: {
+    title: "Computation and Intelligence",
+    home: "🏠 Home",
+    labs: "🔬 Labs",
+    labItems: ["Lab 1","Lab 2","Lab 3","Lab 4","Lab 5","Lab 6","Lab 7"],
+    setup: "🔧 Setup"
+  },
+  es: {
+    title: "Computación e Inteligencia",
+    home: "🏠 Inicio",
+    labs: "🔬 Laboratorios",
+    labItems: ["Laboratorio 1","Laboratorio 2","Laboratorio 3","Laboratorio 4","Laboratorio 5","Laboratorio 6","Laboratorio 7"],
+    setup: "🔧 Configuración"
+  }
+};
+
+// --- helper: consolidate/remove duplicate .navbar-brand elements ---
+function consolidateBrand() {
+  const brands = Array.from(document.querySelectorAll(".navbar-brand"));
+  if (brands.length <= 1) return brands[0] || null;
+
+  // Prefer the brand that contains an <img>, otherwise prefer the one with longest text
+  let preferred = brands.find(b => b.querySelector("img")) ||
+                  brands.reduce((a,b) => ( (a.textContent || "").length >= (b.textContent || "").length ? a : b ));
+
+  // If any duplicate has useful href and preferred doesn't, copy it
+  brands.forEach((b) => {
+    if (b === preferred) return;
+    try {
+      if (!preferred.getAttribute("href") && b.getAttribute("href")) {
+        preferred.setAttribute("href", b.getAttribute("href"));
+      }
+      // Remove duplicate from DOM
+      b.remove();
+    } catch (e) {
+      // ignore removal errors
+      console.warn("brand dedupe: couldn't remove a duplicate", e);
+    }
+  });
+
+  return preferred;
+}
+
+// Watch for later DOM changes that might re-insert duplicates (Quarto or other scripts)
+function observeBrandDedupe() {
+  const root = document.querySelector("nav") || document.body;
+  if (!root) return;
+  const observer = new MutationObserver((mutations) => {
+    for (const m of mutations) {
+      if (m.addedNodes && m.addedNodes.length) {
+        // If any added node contains .navbar-brand, run consolidation
+        for (const node of m.addedNodes) {
+          if (node.nodeType !== 1) continue;
+          if (node.matches && node.matches(".navbar-brand")) {
+            consolidateBrand();
+            return;
+          }
+          if (node.querySelector && node.querySelector(".navbar-brand")) {
+            consolidateBrand();
+            return;
+          }
+        }
+      }
+    }
+  });
+  observer.observe(root, { childList: true, subtree: true });
+}
+
+// --- update functions (use consolidated brand) ---
+function updateNavbarText(lang) {
+  document.title = navbarLabels[lang].title;
+
+  // Ensure single brand element
+  const brand = consolidateBrand() || document.querySelector(".navbar-brand");
+  if (brand) {
+    const img = brand.querySelector("img");
+    if (img) {
+      img.alt = navbarLabels[lang].title;
+    } else {
+      brand.textContent = navbarLabels[lang].title;
+    }
+  }
+
+  // Home link
+  const homeLink =
+      document.querySelector(".navbar .navbar-nav.me-auto > li:nth-child(1) > a") ||
+      document.querySelector(".navbar .navbar-nav:not(.ms-auto) > li:nth-child(1) > a");
+  if (homeLink) homeLink.textContent = navbarLabels[lang].home;
+
+  // Setup link
+  const setupLink =
+      document.querySelector(".navbar .navbar-nav.me-auto > li:nth-child(2) > a") ||
+      document.querySelector(".navbar .navbar-nav:not(.ms-auto) > li:nth-child(2) > a");
+  if (setupLink) setupLink.textContent = navbarLabels[lang].setup;
+
+  // Labs dropdown toggle
+  const labsToggle =
+      document.querySelector(".navbar .navbar-nav.me-auto > li:nth-child(3) > a[data-bs-toggle='dropdown']") ||
+      document.querySelector(".navbar .navbar-nav:not(.ms-auto) > li:nth-child(3) > a[data-bs-toggle='dropdown']");
+  if (labsToggle) labsToggle.textContent = navbarLabels[lang].labs;
+
+  // Labs dropdown items
+  const labLinks = document.querySelectorAll(".navbar .dropdown-menu a.dropdown-item");
+  labLinks.forEach((link, i) => {
+    if (navbarLabels[lang].labItems[i]) {
+      link.textContent = navbarLabels[lang].labItems[i];
+    }
+  });
+}
+
+function updatedURL(lang, url) {
+  if (url.endsWith("/") || url.endsWith("index.html")) {
+    if (lang === "es") url = url.replace("index.html", "index.es.html");
+    else if (url.endsWith("index.es.html")) url = url.replace("index.es.html", "index.html");
+  } else if (url.includes(".es.html")) {
+    if (lang === "en") url = url.replace(".es.html", ".html");
+  } else if (url.endsWith(".html")) {
+    if (lang === "es") url = url.replace(".html", ".es.html");
+  }
+  return url;
+}
+
+function updateNavbarHref(lang) {
+  const brand = consolidateBrand() || document.querySelector(".navbar-brand");
+  if (brand) {
+    let href = brand.getAttribute("href");
+    if (href) brand.setAttribute("href", updatedURL(lang, href));
+  }
+
+  const homeLink =
+      document.querySelector(".navbar .navbar-nav.me-auto > li:nth-child(1) > a") ||
+      document.querySelector(".navbar .navbar-nav:not(.ms-auto) > li:nth-child(1) > a");
+  if (homeLink) {
+    let href = homeLink.getAttribute("href");
+    if (href) homeLink.setAttribute("href", updatedURL(lang, href));
+  }
+
+  const setupLink =
+      document.querySelector(".navbar .navbar-nav.me-auto > li:nth-child(2) > a") ||
+      document.querySelector(".navbar .navbar-nav:not(.ms-auto) > li:nth-child(2) > a");
+  if (setupLink) {
+    let href = setupLink.getAttribute("href");
+    if (href) setupLink.setAttribute("href", updatedURL(lang, href));
+  }
+
+  const labsToggle =
+      document.querySelector(".navbar .navbar-nav.me-auto > li:nth-child(3) > a[data-bs-toggle='dropdown']") ||
+      document.querySelector(".navbar .navbar-nav:not(.ms-auto) > li:nth-child(3) > a[data-bs-toggle='dropdown']");
+  if (labsToggle) {
+    let href = labsToggle.getAttribute("href");
+    if (href) labsToggle.setAttribute("href", updatedURL(lang, href));
+  }
+
+  const labLinks = document.querySelectorAll(".navbar .dropdown-menu a.dropdown-item");
+  labLinks.forEach((link) => {
+    let href = link.getAttribute("href");
+    if (href) link.setAttribute("href", updatedURL(lang, href));
+  });
+}
+
+function switchLang() {
+  let url = window.location.href;
+  let hash = window.location.hash;
+  let targetLang = (currentLang === "es") ? "en" : "es";
+  localStorage.setItem("lang", targetLang);
+  currentLang = targetLang;
+  url = url.replace(hash, "");
+  if (url.endsWith("/") || url.endsWith("index.html")) {
+    if (targetLang === "es") url = url.replace("index.html", "index.es.html");
+  } else if (url.endsWith("index.es.html")) {
+    if (targetLang === "en") url = url.replace("index.es.html", "index.html");
+  } else if (url.includes(".es.html")) {
+    if (targetLang === "en") url = url.replace(".es.html", ".html");
+  } else if (url.endsWith(".html")) {
+    if (targetLang === "es") url = url.replace(".html", ".es.html");
+  }
+  window.location.href = url + hash;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  // First dedupe immediately
+  consolidateBrand();
+
+  // Observe for later re-renders
+  observeBrandDedupe();
+
+  updateNavbarText(currentLang);
+  updateNavbarHref(currentLang);
+
+  const switcher = document.querySelector("a[href='javascript:void(0)']");
+  if (switcher) {
+    switcher.style.cursor = "pointer";
+    switcher.addEventListener("click", (e) => {
+      e.preventDefault();
+      switchLang();
+    });
+  }
+
+  // If root, redirect to saved language
+  if (window.location.pathname.endsWith("/") || window.location.pathname.endsWith("/Computation_and_Intelligence/")) {
+    let saved = localStorage.getItem("lang") || "en";
+    if (saved === "es") window.location.href = "index.es.html";
+    else window.location.href = "index.html";
+  }
+});
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/sevisal\.github\.io\/Computation_and_Intelligence\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© 2025 Carlos Sevilla Salcedo</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
