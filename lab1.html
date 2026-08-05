@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Lab session 1: Introduction to Orange and data handling – Computation and Intelligence</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./favicon.ico" rel="icon">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-82aba43ae7933661fba683bbc771ca3c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Computation and Intelligence</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">🏠 Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./setup.html"> 
+<span class="menu-text">🔧 Setup</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-labs" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">🔬 Labs</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-labs">    
+        <li>
+    <a class="dropdown-item" href="./lab1.html">
+ <span class="dropdown-text">Lab 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./lab2.html">
+ <span class="dropdown-text">Lab 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./lab3.html">
+ <span class="dropdown-text">Lab 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./lab4.html">
+ <span class="dropdown-text">Lab 4</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./lab5.html">
+ <span class="dropdown-text">Lab 5</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./lab6.html">
+ <span class="dropdown-text">Lab 6</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="javascript:void(0)"> 
+<span class="menu-text">🌐</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title"><strong>Contents</strong></h2>
+   
+  <ul>
+  <li><a href="#session-objectives" id="toc-session-objectives" class="nav-link active" data-scroll-target="#session-objectives">Session objectives</a></li>
+  <li><a href="#proposed-activities" id="toc-proposed-activities" class="nav-link" data-scroll-target="#proposed-activities">Proposed activities</a>
+  <ul>
+  <li><a href="#exploring-oranges-interface" id="toc-exploring-oranges-interface" class="nav-link" data-scroll-target="#exploring-oranges-interface">1. Exploring Orange’s interface</a></li>
+  <li><a href="#loading-data-and-basic-visualization" id="toc-loading-data-and-basic-visualization" class="nav-link" data-scroll-target="#loading-data-and-basic-visualization">2. Loading data and basic visualization</a></li>
+  <li><a href="#classifying-variable-types" id="toc-classifying-variable-types" class="nav-link" data-scroll-target="#classifying-variable-types">3. Classifying variable types</a></li>
+  <li><a href="#visualizing-distributions" id="toc-visualizing-distributions" class="nav-link" data-scroll-target="#visualizing-distributions">4. Visualizing distributions</a></li>
+  <li><a href="#relationships-between-variables" id="toc-relationships-between-variables" class="nav-link" data-scroll-target="#relationships-between-variables">5. Relationships between variables</a></li>
+  <li><a href="#customizing-the-analysis" id="toc-customizing-the-analysis" class="nav-link" data-scroll-target="#customizing-the-analysis">6. Customizing the analysis</a></li>
+  <li><a href="#detecting-data-problems" id="toc-detecting-data-problems" class="nav-link" data-scroll-target="#detecting-data-problems">7. Detecting data problems</a></li>
+  </ul></li>
+  <li><a href="#final-note" id="toc-final-note" class="nav-link" data-scroll-target="#final-note">Final note</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content column-page-right" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Lab session 1: Introduction to Orange and data handling</h1>
+</div>
+
+
+
+<div class="quarto-title-meta column-page-right">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="session-objectives" class="level1">
+<h1>Session objectives</h1>
+<div class="objective-card">
+<p>🎯 <strong>General objective:</strong><br>
+Get familiar with the <strong>Orange Data Mining</strong> tool and learn how to explore and handle data before applying models.</p>
+</div>
+<p><img src="_resources/images/orange.jpg" class="img-right img-fluid"> Orange Data Mining lets you build visual workflows to analyze data, explore relationships between variables, and prepare datasets for modeling.<br>
+It is a free software platform aimed at teaching and experimenting with data science and machine learning. Its intuitive graphical interface allows dragging and connecting widgets to perform tasks like loading data, visualization, preprocessing, modeling, and evaluating results without programming.<br>
+Orange also offers extensions for advanced analysis, text mining, bioinformatics, and interactive visualizations, facilitating learning and exploration of modern AI techniques.</p>
+<p>In this session we will focus on:</p>
+<ul>
+<li>Learning to navigate Orange’s interface and main widget categories.</li>
+<li>Loading and inspecting real datasets.</li>
+<li>Identifying and classifying variable types in the data.</li>
+<li>Visualizing distributions and relationships between variables to discover patterns.</li>
+<li>Selecting relevant features and tailoring the analysis.</li>
+<li>Detecting common data issues such as missing values or inconsistencies.</li>
+</ul>
+<p>These skills are fundamental for exploratory analysis and preparing data before applying machine learning algorithms.</p>
+<p><strong>Let’s get started!</strong></p>
+<hr>
+</section>
+<section id="proposed-activities" class="level1">
+<h1>Proposed activities</h1>
+<section id="exploring-oranges-interface" class="level2">
+<h2 class="anchored" data-anchor-id="exploring-oranges-interface">1. Exploring Orange’s interface</h2>
+<div class="objective-card">
+<p>🎯 <strong>Objective:</strong> Get familiar with the graphical interface and widgets.</p>
+</div>
+<p>In this activity we will explore Orange’s interface and main components. <img src="_resources/images/orangefront.png" class="img-center img-fluid"></p>
+<p>To do this, start by:</p>
+<ol type="1">
+<li>Open the Orange application and explore the interface.</li>
+<li>Examine the widget categories: <strong>Data</strong>, <strong>Visualize</strong>, <strong>Model</strong>, <strong>Evaluate</strong>.</li>
+<li>Drag 2–3 widgets from different categories onto the canvas (for example, <strong>File</strong>, <strong>Scatter Plot</strong>, <strong>Test &amp; Score</strong>).</li>
+<li>Connect the widgets and observe how data flows between them.</li>
+<li>Explore each widget’s configuration options.</li>
+</ol>
+<div class="question-card">
+<p>📝 <strong>Questions:</strong></p>
+<ol type="1">
+<li>What does each category allow you to do?</li>
+<li>What advantages do you observe when working visually with workflows?</li>
+</ol>
+</div>
+<hr>
+</section>
+<section id="loading-data-and-basic-visualization" class="level2">
+<h2 class="anchored" data-anchor-id="loading-data-and-basic-visualization">2. Loading data and basic visualization</h2>
+<div class="objective-card">
+<p>🎯 <strong>Objective:</strong> Learn to load datasets and inspect their contents.</p>
+</div>
+<p>In this activity you will learn to load a dataset in Orange and explore its content using available widgets. To do this:<img src="_resources/images/titanic.gif" class="img-right img-fluid" alt="Source: Loofandjimmy.com"></p>
+<ol type="1">
+<li>Drag the <strong>File</strong> widget onto the canvas and select the provided data file (<code>titanic.tab</code>, <code>heart_disease.tab</code>).</li>
+<li>Connect the <strong>File</strong> widget to the <strong>Data Table</strong> widget to view the dataset.</li>
+<li>Inspect the columns (attributes), rows (instances), and variable types in the dataset.</li>
+<li>Connect the <strong>File</strong> widget to the <strong>Data Info</strong> widget to get a dataset summary, including number of rows, columns, variable types, and missing values.</li>
+</ol>
+<p>This initial exploration will help you get familiar with loading and viewing data in Orange, and identify potential problems that could affect later analysis.</p>
+<div class="question-card">
+<p>📝 <strong>Questions:</strong></p>
+<ol type="1">
+<li>How many columns and rows does the dataset have?</li>
+<li>What types of variables (categorical, numerical) can you identify?</li>
+<li>What is the purpose of the target variable in this analysis?</li>
+<li>Are there missing or inconsistent values in the data? How did you identify them?</li>
+<li>Why is it important to review the data before applying models?</li>
+</ol>
+</div>
+<hr>
+</section>
+<section id="classifying-variable-types" class="level2">
+<h2 class="anchored" data-anchor-id="classifying-variable-types">3. Classifying variable types</h2>
+<div class="objective-card">
+<p>🎯 <strong>Objective:</strong> Distinguish categorical variables, numerical variables, and the target variable.</p>
+</div>
+<p><img src="_resources/images/counting.gif" class="img-right img-fluid" alt="Figure: Counting error"> In this activity you will identify and classify variable types in the dataset, distinguishing between categorical, numerical, and the target (<strong>target</strong>) variables. This is essential to understand how data can be used in machine learning models and to correctly choose the variable you want to predict.</p>
+<p>Steps:</p>
+<ol type="1">
+<li>Inspect the dataset in the <strong>Data Table</strong> widget and review each column.</li>
+<li>Use the <strong>Data Info</strong> widget to obtain a summary of variable types (categorical, numerical, etc.).</li>
+<li>Analyze column names and values to identify which could be the target variable.</li>
+</ol>
+<div class="question-card">
+<p>📝 <strong>Questions:</strong></p>
+<ol type="1">
+<li>Which variables are categorical and which are numerical in the dataset?<br>
+</li>
+<li>What problems might arise if you select a different variable as the target?<br>
+</li>
+<li>How does the choice of target variable affect the type of model you can apply later?</li>
+</ol>
+</div>
+<hr>
+</section>
+<section id="visualizing-distributions" class="level2">
+<h2 class="anchored" data-anchor-id="visualizing-distributions">4. Visualizing distributions</h2>
+<div class="objective-card">
+<p>🎯 <strong>Objective:</strong> Explore how variable values are distributed.</p>
+</div>
+<p>Now you will visualize variable distributions to better understand their behavior and characteristics. This helps identify patterns, trends, and potential issues like class imbalance.</p>
+<p><img src="_resources/images/gauss.png" class="img-center img-fluid"></p>
+<p>Start by:</p>
+<ol type="1">
+<li>Drag the <strong>Distributions</strong> widget to the canvas and connect it to <strong>File</strong> or <strong>Select Columns</strong>.</li>
+<li>Select a numerical variable to see its histogram and a categorical variable to see its bar chart.</li>
+<li>Observe distribution shapes, outliers, and category frequencies.</li>
+<li>Repeat for several important variables, including the target variable.</li>
+<li>Try the <strong>Feature Statistics</strong> widget for additional insights.</li>
+</ol>
+<div class="question-card">
+<p>📝 <strong>Questions:</strong></p>
+<ol type="1">
+<li>Which variables seem most relevant?<br>
+</li>
+<li>How does class imbalance affect model training?</li>
+<li>What do you observe about outliers in numerical variables?<br>
+</li>
+<li>How can variable distributions influence preprocessing and modeling choices?</li>
+</ol>
+</div>
+<hr>
+</section>
+<section id="relationships-between-variables" class="level2">
+<h2 class="anchored" data-anchor-id="relationships-between-variables">5. Relationships between variables</h2>
+<div class="objective-card">
+<p>🎯 <strong>Objective:</strong> Observe patterns and correlations between variables.</p>
+</div>
+<p>In this activity you will explore relationships between variables to identify patterns, correlations, and potential interactions that may be relevant for analysis. This is critical to understand how variables relate to each other and to the target.</p>
+<p><img src="_resources/images/spiderman.jpg" class="img-center img-fluid"></p>
+<p>Steps:</p>
+<ol type="1">
+<li>Drag the <strong>Scatter Plot</strong> widget to the canvas and connect it to <strong>File</strong> or <strong>Select Columns</strong>.</li>
+<li>Select two numerical variables for the X and Y axes.</li>
+<li>Color the points by the target variable to see class distribution.</li>
+<li>Experiment with different variable pairs to find interesting relationships.</li>
+</ol>
+<div class="question-card">
+<p>📝 <strong>Questions:</strong></p>
+<ol type="1">
+<li>Do you see clear groupings or separations between classes? What does that mean?</li>
+<li>Interpret the patterns seen in the scatter plots.</li>
+<li>Which variable relationships might help predict the target?<br>
+</li>
+<li>How might these relationships influence feature selection for modeling?</li>
+</ol>
+</div>
+<hr>
+</section>
+<section id="customizing-the-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="customizing-the-analysis">6. Customizing the analysis</h2>
+<div class="objective-card">
+<p>🎯 <strong>Objective:</strong> Select only relevant variables and improve the workflow.</p>
+</div>
+<p><img src="_resources/images/selection.gif" class="img-right img-fluid" alt="Figure: Selection"> Not all variables in a dataset are equally useful for analysis or modeling. In this activity you will learn to select and focus on the most relevant variables, improving efficiency and effectiveness. To do this:</p>
+<ol type="1">
+<li>Use the <strong>Select Columns</strong> widget to choose variables you consider most important based on previous visualizations.</li>
+<li>Hide columns that don’t add useful information (for example, unique identifiers, names, etc.).<br>
+</li>
+<li>Change the target variable if necessary and observe how it affects the connected widgets.</li>
+<li>Review and adjust the workflow to focus on selected variables.</li>
+</ol>
+<div class="question-card">
+<p>📝 <strong>Questions:</strong></p>
+<ol type="1">
+<li>What criteria did you use to select relevant variables?<br>
+</li>
+<li>How did this affect visualizations and analysis?</li>
+<li>What did you learn about the importance of feature selection in data analysis?<br>
+</li>
+<li>What steps would you take to validate that the selected variables are appropriate?<br>
+</li>
+</ol>
+</div>
+<hr>
+</section>
+<section id="detecting-data-problems" class="level2">
+<h2 class="anchored" data-anchor-id="detecting-data-problems">7. Detecting data problems</h2>
+<div class="objective-card">
+<p>🎯 <strong>Objective:</strong> Identify missing values and other irregularities.</p>
+</div>
+<p><img src="_resources/images/error.jpg" class="img-right img-fluid" alt="Figure: Error"> Finally, it’s essential to detect and handle common data issues like missing values, inconsistencies, or errors. These problems can negatively affect analysis and model building if not addressed.</p>
+<p>Using the <code>heart_disease.tab</code> dataset, follow these steps:</p>
+<ol type="1">
+<li>Drag the <strong>Data Info</strong> widget to the canvas and connect it to <strong>File</strong> or <strong>Select Columns</strong>.</li>
+<li>Review the dataset summary provided by <strong>Data Info</strong>, paying attention to:
+<ul>
+<li>Number of rows and columns.</li>
+<li>Variable types.</li>
+<li>Missing or inconsistent values.</li>
+</ul></li>
+<li>Identify any potential problems in the data.</li>
+<li>Consider strategies to handle these issues, such as filling missing values, removing rows or columns, or transforming data.</li>
+</ol>
+<div class="question-card">
+<p>📝 <strong>Questions:</strong></p>
+<ol type="1">
+<li>What problems did you find in the data?<br>
+</li>
+<li>What strategies would you propose to handle missing values or inconsistencies?</li>
+<li>How would you decide between removing data or imputing values?<br>
+</li>
+<li>What consequences can ignoring missing values have?</li>
+</ol>
+</div>
+<hr>
+</section>
+</section>
+<section id="final-note" class="level1">
+<h1>Final note</h1>
+<div class="final-note-card">
+<p>🎉 Well done! You now have a better understanding of the importance of exploring and analyzing data before modeling.<br>
+Before finishing, remember to <strong>save</strong> your workflow with <strong>File &gt; Save As…</strong> so you can resume it later and continue learning.</p>
+</div>
+<div class="submission-card">
+<p><strong>📤 How to submit</strong></p>
+<ul>
+<li>Save/export your completed report as a PDF.</li>
+<li>Rename the PDF file following the convention below.</li>
+<li>Go to Aula Global &rarr; this course &rarr; Assignments &rarr; &ldquo;Lab 1&rdquo; submission box, and upload the PDF there before the deadline.</li>
+<li>Also attach your Orange workflow file (.ows, saved via File &gt; Save As&hellip; in Orange) in the same submission.</li>
+</ul>
+<p>File name: <span class="filename-example">Lab1_Surname_FirstName.pdf</span> (e.g. <span class="filename-example">Lab1_Garcia_Maria.pdf</span>)</p>
+</div>
+</section>
+<section id="explore-the-labs" class="level1 unnumbered unlisted margin">
+<h1 class="unnumbered unlisted">Explore the Labs</h1>
+<div class="lab-grid">
+  <a href="./lab1.html" class="lab-card">
+    <div class="card-inner">
+      <img src="_resources/images/lab1.jpg" alt="Lab 1">
+      <div class="overlay">
+        <div class="overlay-text">
+          <h3 class="anchored" data-anchor-id="explore-the-labs">Lab 1</h3>
+          <span class="subtitle">Introduction to Orange and Data Handling</span>
+        </div>
+      </div>
+    </div>
+  </a>
+  <a href="./lab2.html" class="lab-card">
+    <div class="card-inner">
+      <img src="_resources/images/lab2.jpg" alt="Lab 2">
+      <div class="overlay">
+        <div class="overlay-text">
+          <h3 class="anchored">Lab 2</h3>
+          <span class="subtitle">Data Preprocessing</span>
+        </div>
+      </div>
+    </div>
+  </a>
+  <a href="./lab3.html" class="lab-card">
+    <div class="card-inner">
+      <img src="_resources/images/lab3.jpg" alt="Lab 3">
+      <div class="overlay">
+        <div class="overlay-text">
+          <h3 class="anchored">Lab 3</h3>
+          <span class="subtitle">Regression Problems</span>
+        </div>
+      </div>
+    </div>
+  </a>
+  <a href="./lab4.html" class="lab-card">
+    <div class="card-inner">
+      <img src="_resources/images/lab4.jpg" alt="Lab 4">
+      <div class="overlay">
+        <div class="overlay-text">
+          <h3 class="anchored">Lab 4</h3>
+          <span class="subtitle">Classification Problems</span>
+        </div>
+      </div>
+    </div>
+  </a>
+  <a href="./lab5.html" class="lab-card">
+    <div class="card-inner">
+      <img src="_resources/images/lab5.jpg" alt="Lab 5">
+      <div class="overlay">
+        <div class="overlay-text">
+          <h3 class="anchored">Lab 5</h3>
+          <span class="subtitle">Unsupervised Learning</span>
+        </div>
+      </div>
+    </div>
+  </a>
+  <a href="./lab6.html" class="lab-card">
+    <div class="card-inner">
+      <img src="_resources/images/lab6.jpg" alt="Lab 6">
+      <div class="overlay">
+        <div class="overlay-text">
+          <h3 class="anchored">Lab 6</h3>
+          <span class="subtitle">Recommender Systems</span>
+        </div>
+      </div>
+    </div>
+  </a>
+</div>
+</section>
+
+
+
+</main> <!-- /main -->
+<script>
+/* language.js — dedupe-safe version
+   If you include this as an external .js file, remove the <script> wrappers.
+*/
+
+let currentLang = localStorage.getItem("lang") || "en";
+
+// keep your existing labels object (trimmed here for brevity — keep your full object)
+const navbarLabels = {
+  en: {
+    title: "Computation and Intelligence",
+    home: "🏠 Home",
+    labs: "🔬 Labs",
+    labItems: ["Lab 1","Lab 2","Lab 3","Lab 4","Lab 5","Lab 6","Lab 7"],
+    setup: "🔧 Setup"
+  },
+  es: {
+    title: "Computación e Inteligencia",
+    home: "🏠 Inicio",
+    labs: "🔬 Laboratorios",
+    labItems: ["Laboratorio 1","Laboratorio 2","Laboratorio 3","Laboratorio 4","Laboratorio 5","Laboratorio 6","Laboratorio 7"],
+    setup: "🔧 Configuración"
+  }
+};
+
+// --- helper: consolidate/remove duplicate .navbar-brand elements ---
+function consolidateBrand() {
+  const brands = Array.from(document.querySelectorAll(".navbar-brand"));
+  if (brands.length <= 1) return brands[0] || null;
+
+  // Prefer the brand that contains an <img>, otherwise prefer the one with longest text
+  let preferred = brands.find(b => b.querySelector("img")) ||
+                  brands.reduce((a,b) => ( (a.textContent || "").length >= (b.textContent || "").length ? a : b ));
+
+  // If any duplicate has useful href and preferred doesn't, copy it
+  brands.forEach((b) => {
+    if (b === preferred) return;
+    try {
+      if (!preferred.getAttribute("href") && b.getAttribute("href")) {
+        preferred.setAttribute("href", b.getAttribute("href"));
+      }
+      // Remove duplicate from DOM
+      b.remove();
+    } catch (e) {
+      // ignore removal errors
+      console.warn("brand dedupe: couldn't remove a duplicate", e);
+    }
+  });
+
+  return preferred;
+}
+
+// Watch for later DOM changes that might re-insert duplicates (Quarto or other scripts)
+function observeBrandDedupe() {
+  const root = document.querySelector("nav") || document.body;
+  if (!root) return;
+  const observer = new MutationObserver((mutations) => {
+    for (const m of mutations) {
+      if (m.addedNodes && m.addedNodes.length) {
+        // If any added node contains .navbar-brand, run consolidation
+        for (const node of m.addedNodes) {
+          if (node.nodeType !== 1) continue;
+          if (node.matches && node.matches(".navbar-brand")) {
+            consolidateBrand();
+            return;
+          }
+          if (node.querySelector && node.querySelector(".navbar-brand")) {
+            consolidateBrand();
+            return;
+          }
+        }
+      }
+    }
+  });
+  observer.observe(root, { childList: true, subtree: true });
+}
+
+// --- update functions (use consolidated brand) ---
+function updateNavbarText(lang) {
+  document.title = navbarLabels[lang].title;
+
+  // Ensure single brand element
+  const brand = consolidateBrand() || document.querySelector(".navbar-brand");
+  if (brand) {
+    const img = brand.querySelector("img");
+    if (img) {
+      img.alt = navbarLabels[lang].title;
+    } else {
+      brand.textContent = navbarLabels[lang].title;
+    }
+  }
+
+  // Home link
+  const homeLink =
+      document.querySelector(".navbar .navbar-nav.me-auto > li:nth-child(1) > a") ||
+      document.querySelector(".navbar .navbar-nav:not(.ms-auto) > li:nth-child(1) > a");
+  if (homeLink) homeLink.textContent = navbarLabels[lang].home;
+
+  // Setup link
+  const setupLink =
+      document.querySelector(".navbar .navbar-nav.me-auto > li:nth-child(2) > a") ||
+      document.querySelector(".navbar .navbar-nav:not(.ms-auto) > li:nth-child(2) > a");
+  if (setupLink) setupLink.textContent = navbarLabels[lang].setup;
+
+  // Labs dropdown toggle
+  const labsToggle =
+      document.querySelector(".navbar .navbar-nav.me-auto > li:nth-child(3) > a[data-bs-toggle='dropdown']") ||
+      document.querySelector(".navbar .navbar-nav:not(.ms-auto) > li:nth-child(3) > a[data-bs-toggle='dropdown']");
+  if (labsToggle) labsToggle.textContent = navbarLabels[lang].labs;
+
+  // Labs dropdown items
+  const labLinks = document.querySelectorAll(".navbar .dropdown-menu a.dropdown-item");
+  labLinks.forEach((link, i) => {
+    if (navbarLabels[lang].labItems[i]) {
+      link.textContent = navbarLabels[lang].labItems[i];
+    }
+  });
+}
+
+function updatedURL(lang, url) {
+  if (url.endsWith("/") || url.endsWith("index.html")) {
+    if (lang === "es") url = url.replace("index.html", "index.es.html");
+    else if (url.endsWith("index.es.html")) url = url.replace("index.es.html", "index.html");
+  } else if (url.includes(".es.html")) {
+    if (lang === "en") url = url.replace(".es.html", ".html");
+  } else if (url.endsWith(".html")) {
+    if (lang === "es") url = url.replace(".html", ".es.html");
+  }
+  return url;
+}
+
+function updateNavbarHref(lang) {
+  const brand = consolidateBrand() || document.querySelector(".navbar-brand");
+  if (brand) {
+    let href = brand.getAttribute("href");
+    if (href) brand.setAttribute("href", updatedURL(lang, href));
+  }
+
+  const homeLink =
+      document.querySelector(".navbar .navbar-nav.me-auto > li:nth-child(1) > a") ||
+      document.querySelector(".navbar .navbar-nav:not(.ms-auto) > li:nth-child(1) > a");
+  if (homeLink) {
+    let href = homeLink.getAttribute("href");
+    if (href) homeLink.setAttribute("href", updatedURL(lang, href));
+  }
+
+  const setupLink =
+      document.querySelector(".navbar .navbar-nav.me-auto > li:nth-child(2) > a") ||
+      document.querySelector(".navbar .navbar-nav:not(.ms-auto) > li:nth-child(2) > a");
+  if (setupLink) {
+    let href = setupLink.getAttribute("href");
+    if (href) setupLink.setAttribute("href", updatedURL(lang, href));
+  }
+
+  const labsToggle =
+      document.querySelector(".navbar .navbar-nav.me-auto > li:nth-child(3) > a[data-bs-toggle='dropdown']") ||
+      document.querySelector(".navbar .navbar-nav:not(.ms-auto) > li:nth-child(3) > a[data-bs-toggle='dropdown']");
+  if (labsToggle) {
+    let href = labsToggle.getAttribute("href");
+    if (href) labsToggle.setAttribute("href", updatedURL(lang, href));
+  }
+
+  const labLinks = document.querySelectorAll(".navbar .dropdown-menu a.dropdown-item");
+  labLinks.forEach((link) => {
+    let href = link.getAttribute("href");
+    if (href) link.setAttribute("href", updatedURL(lang, href));
+  });
+}
+
+function switchLang() {
+  let url = window.location.href;
+  let hash = window.location.hash;
+  let targetLang = (currentLang === "es") ? "en" : "es";
+  localStorage.setItem("lang", targetLang);
+  currentLang = targetLang;
+  url = url.replace(hash, "");
+  if (url.endsWith("/") || url.endsWith("index.html")) {
+    if (targetLang === "es") url = url.replace("index.html", "index.es.html");
+  } else if (url.endsWith("index.es.html")) {
+    if (targetLang === "en") url = url.replace("index.es.html", "index.html");
+  } else if (url.includes(".es.html")) {
+    if (targetLang === "en") url = url.replace(".es.html", ".html");
+  } else if (url.endsWith(".html")) {
+    if (targetLang === "es") url = url.replace(".html", ".es.html");
+  }
+  window.location.href = url + hash;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  // First dedupe immediately
+  consolidateBrand();
+
+  // Observe for later re-renders
+  observeBrandDedupe();
+
+  updateNavbarText(currentLang);
+  updateNavbarHref(currentLang);
+
+  const switcher = document.querySelector("a[href='javascript:void(0)']");
+  if (switcher) {
+    switcher.style.cursor = "pointer";
+    switcher.addEventListener("click", (e) => {
+      e.preventDefault();
+      switchLang();
+    });
+  }
+
+  // If root, redirect to saved language
+  if (window.location.pathname.endsWith("/") || window.location.pathname.endsWith("/Computation_and_Intelligence/")) {
+    let saved = localStorage.getItem("lang") || "en";
+    if (saved === "es") window.location.href = "index.es.html";
+    else window.location.href = "index.html";
+  }
+});
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/sevisal\.github\.io\/Computation_and_Intelligence\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© 2025 Carlos Sevilla Salcedo</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
