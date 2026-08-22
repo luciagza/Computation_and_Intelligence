@@ -307,6 +307,44 @@ window.Quarto = {
 <p>Ten en cuenta que un recomendador basado en popularidad ignora las preferencias individuales de los usuarios. En lugar de eso, asume que los ítems que gustan a muchos usuarios son más propensos a gustarle a un nuevo usuario.</p>
 <p>Para hacer esto, utilizaremos el widget <code>Baselines</code> en Orange. Pasa los datos de entrenamiento y configúralo para calcular el promedio de usuario como la estrategia de recomendación. Luego, conecta la salida a un widget <code>Predictions</code> para evaluar su rendimiento con los datos de prueba.</p>
 <p>Repite el proceso utilizando la calificación media de cada libro como la estrategia de recomendación. Compara los resultados de ambos enfoques.</p>
+<p>⚠️ <strong>Nota:</strong> el widget <code>Baselines</code> (como el resto del add-on <code>orange3-recommendation</code>) puede fallar al cargar un workflow guardado ("Could not load the full workflow: some of the nodes/links could not be reconstructed"), dependiendo de tu instalación de Orange. Si te pasa, conecta los datos de entrenamiento y de prueba a un widget <code>Python Script</code> en su lugar y usa este código, que implementa directamente las mismas baselines de media global/usuario/libro:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cbfallback1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python">import numpy as np
+
+# in_datas[0] and in_datas[1] are the two connections into this widget&#x27;s Data
+# input (order not guaranteed, so we sort by size: train is the larger one)
+a, b = in_datas[0], in_datas[1]
+train, test = (a, b) if len(a) &gt; len(b) else (b, a)
+
+user_idx = train.domain.index(&quot;userID&quot;)
+item_idx = train.domain.index(&quot;bookID_encoded&quot;)
+train_user = train.X[:, user_idx]; train_item = train.X[:, item_idx]; train_rating = train.Y
+test_user = test.X[:, user_idx]; test_item = test.X[:, item_idx]; test_rating = test.Y
+global_mean = train_rating.mean()
+
+def group_mean(ids, values):
+    sums = {}; counts = {}
+    for i, v in zip(ids, values):
+        sums[i] = sums.get(i, 0.0) + v
+        counts[i] = counts.get(i, 0) + 1
+    return {i: sums[i] / counts[i] for i in sums}
+
+user_avg = group_mean(train_user, train_rating)
+item_avg = group_mean(train_item, train_rating)
+
+def evaluate(preds, actual, name):
+    err = preds - actual
+    rmse = np.sqrt(np.mean(err ** 2))
+    mae = np.mean(np.abs(err))
+    print(f&quot;{name}: RMSE={rmse:.3f}  MAE={mae:.3f}&quot;)
+
+preds_global = np.full(len(test_rating), global_mean)
+evaluate(preds_global, test_rating, &quot;Global mean baseline&quot;)
+
+preds_user = np.array([user_avg.get(u, global_mean) for u in test_user])
+evaluate(preds_user, test_rating, &quot;User-average baseline&quot;)
+
+preds_item = np.array([item_avg.get(i, global_mean) for i in test_item])
+evaluate(preds_item, test_rating, &quot;Item-average baseline&quot;)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="question-card">
 <p>📝 <strong>Preguntas:</strong></p>
 <ol type="1">
@@ -377,6 +415,49 @@ R \approx P \cdot Q^T,
 \]</span> donde (R) es la matriz de interacción original usuario-elemento, (P) es la matriz de características del usuario y (Q) es la matriz de características del elemento.</p>
 <p>Para implementar esto, utilizaremos el widget <code>BRISMF</code> en Orange. Pasa los datos de entrenamiento al widget y configura sus parámetros (por ejemplo, número de factores, regularización). Luego, conecta la salida a un widget de <code>Predictions</code> para evaluar su rendimiento con los datos de prueba.</p>
 <p>También podemos visualizar las características latentes aprendidas por el modelo utilizando la representación de baja dimensión de usuarios y elementos. Utiliza el widget <code>t-SNE</code> para reducir la dimensionalidad de la matriz de características del elemento (matriz (Q)) y visualizarla.</p>
+<p>⚠️ <strong>Nota:</strong> el widget <code>BRISMF</code> puede fallar al cargar de la misma forma (ver la nota de la Sección 2). Si te pasa, conecta los datos de entrenamiento y de prueba a un widget <code>Python Script</code> en su lugar y usa este código, que implementa directamente la misma factorización matricial (SGD con términos de sesgo de usuario/libro) -- prueba varios valores de <code>n_factors</code> y compara:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cbfallback2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python">import numpy as np
+
+a, b = in_datas[0], in_datas[1]
+train, test = (a, b) if len(a) &gt; len(b) else (b, a)
+
+user_idx = train.domain.index(&quot;userID&quot;)
+item_idx = train.domain.index(&quot;bookID_encoded&quot;)
+train_users = train.X[:, user_idx].astype(int)
+train_items = train.X[:, item_idx].astype(int)
+train_ratings = train.Y
+test_users = test.X[:, user_idx].astype(int)
+test_items = test.X[:, item_idx].astype(int)
+test_ratings = test.Y
+
+n_users = int(max(train_users.max(), test_users.max())) + 1
+n_items = int(max(train_items.max(), test_items.max())) + 1
+mu = train_ratings.mean()
+
+def funk_svd(n_factors, n_epochs=20, lr=0.005, reg=0.02, seed=42):
+    rng = np.random.RandomState(seed)
+    P = rng.normal(0, 0.1, (n_users, n_factors))
+    Q = rng.normal(0, 0.1, (n_items, n_factors))
+    bu = np.zeros(n_users); bi = np.zeros(n_items)
+    idx = np.arange(len(train_ratings))
+    for epoch in range(n_epochs):
+        rng.shuffle(idx)
+        for k in idx:
+            u, i, r = train_users[k], train_items[k], train_ratings[k]
+            pred = mu + bu[u] + bi[i] + P[u] @ Q[i]
+            err = r - pred
+            bu[u] += lr * (err - reg * bu[u])
+            bi[i] += lr * (err - reg * bi[i])
+            P[u] += lr * (err * Q[i] - reg * P[u])
+            Q[i] += lr * (err * P[u] - reg * Q[i])
+    return np.array([mu + bu[u] + bi[i] + P[u] @ Q[i] for u, i in zip(test_users, test_items)])
+
+for n_factors in [5, 20, 50]:
+    preds = funk_svd(n_factors)
+    err = preds - test_ratings
+    rmse = np.sqrt(np.mean(err ** 2))
+    mae = np.mean(np.abs(err))
+    print(f&quot;Funk-SVD (factors={n_factors}): RMSE={rmse:.3f}  MAE={mae:.3f}&quot;)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="question-card">
 <p>📝 <strong>Preguntas:</strong></p>
 <ol type="1">

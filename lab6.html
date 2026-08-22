@@ -304,6 +304,44 @@ Understand the fundamental ideas behind recommender systems and learn how to des
 <p>Note that a popularity-based recommender ignores individual user preferences. Instead, it assumes that items liked by many users are more likely to be liked by a new user.</p>
 <p>To do this, we will use the <code>Baselines</code> widget in Orange. Pass the training data and configure it to calculate the user average as the recommendation strategy. Then, connect the output to a <code>Predictions</code> widget to evaluate its performance with the test data.</p>
 <p>Repeat the process using the average rating of each book as the recommendation strategy. Compare the results of both approaches.</p>
+<p>⚠️ <strong>Note:</strong> the <code>Baselines</code> widget (like the rest of the <code>orange3-recommendation</code> add-on) can fail to load when reopening a saved workflow ("Could not load the full workflow: some of the nodes/links could not be reconstructed"), depending on your Orange install. If that happens, connect both the training and test data into a <code>Python Script</code> widget instead and use this code, which implements the same global/user/item average baselines directly:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cbfallback1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python">import numpy as np
+
+# in_datas[0] and in_datas[1] are the two connections into this widget&#x27;s Data
+# input (order not guaranteed, so we sort by size: train is the larger one)
+a, b = in_datas[0], in_datas[1]
+train, test = (a, b) if len(a) &gt; len(b) else (b, a)
+
+user_idx = train.domain.index(&quot;userID&quot;)
+item_idx = train.domain.index(&quot;bookID_encoded&quot;)
+train_user = train.X[:, user_idx]; train_item = train.X[:, item_idx]; train_rating = train.Y
+test_user = test.X[:, user_idx]; test_item = test.X[:, item_idx]; test_rating = test.Y
+global_mean = train_rating.mean()
+
+def group_mean(ids, values):
+    sums = {}; counts = {}
+    for i, v in zip(ids, values):
+        sums[i] = sums.get(i, 0.0) + v
+        counts[i] = counts.get(i, 0) + 1
+    return {i: sums[i] / counts[i] for i in sums}
+
+user_avg = group_mean(train_user, train_rating)
+item_avg = group_mean(train_item, train_rating)
+
+def evaluate(preds, actual, name):
+    err = preds - actual
+    rmse = np.sqrt(np.mean(err ** 2))
+    mae = np.mean(np.abs(err))
+    print(f&quot;{name}: RMSE={rmse:.3f}  MAE={mae:.3f}&quot;)
+
+preds_global = np.full(len(test_rating), global_mean)
+evaluate(preds_global, test_rating, &quot;Global mean baseline&quot;)
+
+preds_user = np.array([user_avg.get(u, global_mean) for u in test_user])
+evaluate(preds_user, test_rating, &quot;User-average baseline&quot;)
+
+preds_item = np.array([item_avg.get(i, global_mean) for i in test_item])
+evaluate(preds_item, test_rating, &quot;Item-average baseline&quot;)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="question-card">
 <p>📝 <strong>Questions:</strong></p>
 <ol type="1">
@@ -374,6 +412,49 @@ R \approx P \cdot Q^T,
 \]</span> where (R) is the original user-item interaction matrix, (P) is the user feature matrix, and (Q) is the item feature matrix.</p>
 <p>To implement this, we will use the <code>BRISMF</code> widget in Orange. Pass the training data to the widget and configure its parameters (e.g., number of factors, regularization). Then, connect the output to a <code>Predictions</code> widget to evaluate its performance with the test data.</p>
 <p>We can also visualize the latent features learned by the model using the low dimensional representation of users and items. Use the <code>t-SNE</code> widget to reduce the dimensionality of the item feature matrix (matrix(Q)) and visualize it using the <code>Scatter Plot</code> widget.</p>
+<p>⚠️ <strong>Note:</strong> the <code>BRISMF</code> widget can fail to load the same way (see the note in Section 2). If it does, connect both the training and test data into a <code>Python Script</code> widget instead and use this code, which implements the same matrix factorization (SGD with user/item bias terms) directly -- try a few different values of <code>n_factors</code> and compare:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cbfallback2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python">import numpy as np
+
+a, b = in_datas[0], in_datas[1]
+train, test = (a, b) if len(a) &gt; len(b) else (b, a)
+
+user_idx = train.domain.index(&quot;userID&quot;)
+item_idx = train.domain.index(&quot;bookID_encoded&quot;)
+train_users = train.X[:, user_idx].astype(int)
+train_items = train.X[:, item_idx].astype(int)
+train_ratings = train.Y
+test_users = test.X[:, user_idx].astype(int)
+test_items = test.X[:, item_idx].astype(int)
+test_ratings = test.Y
+
+n_users = int(max(train_users.max(), test_users.max())) + 1
+n_items = int(max(train_items.max(), test_items.max())) + 1
+mu = train_ratings.mean()
+
+def funk_svd(n_factors, n_epochs=20, lr=0.005, reg=0.02, seed=42):
+    rng = np.random.RandomState(seed)
+    P = rng.normal(0, 0.1, (n_users, n_factors))
+    Q = rng.normal(0, 0.1, (n_items, n_factors))
+    bu = np.zeros(n_users); bi = np.zeros(n_items)
+    idx = np.arange(len(train_ratings))
+    for epoch in range(n_epochs):
+        rng.shuffle(idx)
+        for k in idx:
+            u, i, r = train_users[k], train_items[k], train_ratings[k]
+            pred = mu + bu[u] + bi[i] + P[u] @ Q[i]
+            err = r - pred
+            bu[u] += lr * (err - reg * bu[u])
+            bi[i] += lr * (err - reg * bi[i])
+            P[u] += lr * (err * Q[i] - reg * P[u])
+            Q[i] += lr * (err * P[u] - reg * Q[i])
+    return np.array([mu + bu[u] + bi[i] + P[u] @ Q[i] for u, i in zip(test_users, test_items)])
+
+for n_factors in [5, 20, 50]:
+    preds = funk_svd(n_factors)
+    err = preds - test_ratings
+    rmse = np.sqrt(np.mean(err ** 2))
+    mae = np.mean(np.abs(err))
+    print(f&quot;Funk-SVD (factors={n_factors}): RMSE={rmse:.3f}  MAE={mae:.3f}&quot;)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="question-card">
 <p>📝 <strong>Questions:</strong></p>
 <ol type="1">
