@@ -306,3 +306,9 @@ main.content {
     font-size: 0.9rem;
   }
 }
+
+/* Toggle for labs not yet released: add/remove this class to reveal a lab
+   as the course progresses, instead of deleting any markup. */
+.lab-hidden {
+  display: none !important;
+}
