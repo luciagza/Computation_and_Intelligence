@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Instalación de Orange3 con Conda – Computation and Intelligence</title>
+<title>Sesión 1 de laboratorio: Introducción a Orange y manejo de datos – Computation and Intelligence</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -22,41 +22,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -188,12 +153,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title"><strong>Contenido</strong></h2>
    
   <ul>
-  <li><a href="#requisitos-previos" id="toc-requisitos-previos" class="nav-link active" data-scroll-target="#requisitos-previos">Requisitos previos</a></li>
-  <li><a href="#paso-1-crear-el-archivo-orange3-env.yml" id="toc-paso-1-crear-el-archivo-orange3-env.yml" class="nav-link" data-scroll-target="#paso-1-crear-el-archivo-orange3-env.yml">Paso 1: Crear el archivo <code>orange3-env.yml</code></a></li>
-  <li><a href="#paso-2-crear-el-entorno-conda" id="toc-paso-2-crear-el-entorno-conda" class="nav-link" data-scroll-target="#paso-2-crear-el-entorno-conda">Paso 2: Crear el entorno Conda</a></li>
-  <li><a href="#paso-3-activar-el-entorno" id="toc-paso-3-activar-el-entorno" class="nav-link" data-scroll-target="#paso-3-activar-el-entorno">Paso 3: Activar el entorno</a></li>
-  <li><a href="#paso-4-iniciar-orange3" id="toc-paso-4-iniciar-orange3" class="nav-link" data-scroll-target="#paso-4-iniciar-orange3">Paso 4: Iniciar Orange3</a></li>
-  <li><a href="#notas-y-consejos" id="toc-notas-y-consejos" class="nav-link" data-scroll-target="#notas-y-consejos">Notas y consejos</a></li>
+  <li><a href="#objetivos-de-la-sesión" id="toc-objetivos-de-la-sesión" class="nav-link active" data-scroll-target="#objetivos-de-la-sesión">Objetivos de la sesión</a></li>
+  <li><a href="#actividades-propuestas" id="toc-actividades-propuestas" class="nav-link" data-scroll-target="#actividades-propuestas">Actividades propuestas</a>
+  <ul>
+  <li><a href="#exploración-de-la-interfaz-de-orange" id="toc-exploración-de-la-interfaz-de-orange" class="nav-link" data-scroll-target="#exploración-de-la-interfaz-de-orange">1. Exploración de la interfaz de Orange</a></li>
+  <li><a href="#carga-de-datos-y-visualización-básica" id="toc-carga-de-datos-y-visualización-básica" class="nav-link" data-scroll-target="#carga-de-datos-y-visualización-básica">2. Carga de datos y visualización básica</a></li>
+  <li><a href="#clasificación-de-tipos-de-variables" id="toc-clasificación-de-tipos-de-variables" class="nav-link" data-scroll-target="#clasificación-de-tipos-de-variables">3. Clasificación de tipos de variables</a></li>
+  <li><a href="#visualización-de-distribuciones" id="toc-visualización-de-distribuciones" class="nav-link" data-scroll-target="#visualización-de-distribuciones">4. Visualización de distribuciones</a></li>
+  <li><a href="#relaciones-entre-variables" id="toc-relaciones-entre-variables" class="nav-link" data-scroll-target="#relaciones-entre-variables">5. Relaciones entre variables</a></li>
+  <li><a href="#personalización-del-análisis" id="toc-personalización-del-análisis" class="nav-link" data-scroll-target="#personalización-del-análisis">6. Personalización del análisis</a></li>
+  <li><a href="#detección-de-problemas-en-los-datos" id="toc-detección-de-problemas-en-los-datos" class="nav-link" data-scroll-target="#detección-de-problemas-en-los-datos">7. Detección de problemas en los datos</a></li>
+  </ul></li>
+  <li><a href="#nota-final" id="toc-nota-final" class="nav-link" data-scroll-target="#nota-final">Nota final</a></li>
   </ul>
 </nav>
 </nav>
@@ -206,7 +177,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Instalación de Orange3 con Conda</h1>
+<h1 class="title">Sesión 1 de laboratorio: Introducción a Orange y manejo de datos</h1>
 </div>
 
 
@@ -223,85 +194,350 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="requisitos-previos" class="level1">
-<h1>Requisitos previos</h1>
-<p>Antes de comenzar, asegúrate de tener lo siguiente:</p>
+<section id="objetivos-de-la-sesión" class="level1">
+<h1>Objetivos de la sesión</h1>
+<div class="objective-card">
+<p>🎯 <strong>Objetivo general:</strong><br>
+Familiarizarse con la herramienta <strong>Orange Data Mining</strong> y aprender a explorar y manejar datos antes de aplicar modelos.</p>
+</div>
+<p><img src="_resources/images/orange.jpg" class="img-right img-fluid"> Orange Data Mining permite construir flujos de trabajo visuales para analizar datos, explorar relaciones entre variables y preparar datasets para modelado.<br>
+Es una plataforma de software libre orientada a la enseñanza y experimentación en ciencia de datos y aprendizaje automático. Su interfaz gráfica intuitiva permite arrastrar y conectar widgets para realizar tareas como carga de datos, visualización, preprocesamiento, modelado y evaluación de resultados sin necesidad de programar.<br>
+Orange también ofrece extensiones para análisis avanzado, minería de texto, bioinformática y visualizaciones interactivas, facilitando el aprendizaje y la exploración de técnicas modernas de inteligencia artificial.</p>
+<p>En esta sesión nos centraremos en:</p>
 <ul>
-<li><strong>Miniconda</strong> o <strong>Anaconda</strong> instalado.<br>
-👉 Puedes descargarlo en: <a href="https://www.anaconda.com/products/distribution">https://www.anaconda.com/products/distribution</a>.</li>
-<li>Acceso a una terminal: <em>Anaconda Prompt</em> (en Windows) o una terminal normal (Linux/macOS).</li>
+<li>Aprender a navegar la interfaz de Orange y sus principales categorías de widgets.</li>
+<li>Cargar y examinar conjuntos de datos reales.</li>
+<li>Identificar y clasificar los tipos de variables presentes en los datos.</li>
+<li>Visualizar distribuciones y relaciones entre variables para descubrir patrones.</li>
+<li>Seleccionar variables relevantes y personalizar el análisis.</li>
+<li>Detectar problemas comunes en los datos, como valores ausentes o inconsistencias.</li>
 </ul>
+<p>Estas habilidades son fundamentales para realizar análisis exploratorio y preparar los datos antes de aplicar algoritmos de aprendizaje automático.</p>
+<!-- ![Figura: annoying Orange](_resources/images/annoying.jpg)   -->
+<p><strong>¡Vamos a comenzar!</strong></p>
 <hr>
 </section>
-<section id="paso-1-crear-el-archivo-orange3-env.yml" class="level1">
-<h1>Paso 1: Crear el archivo <code>orange3-env.yml</code></h1>
-<p>Para hacer la instalación reproducible, usaremos un archivo de entorno de Conda.</p>
+<section id="actividades-propuestas" class="level1">
+<h1>Actividades propuestas</h1>
+<div class="objective-card">
+<p>⚠️ <strong>Nota:</strong> cada actividad de abajo hay que hacerla <strong>dos veces</strong> — una con <code>titanic.tab</code> y otra con <code>heart_disease.tab</code> — para poder comparar un dataset totalmente categórico con uno que tiene variables numéricas reales.</p>
+</div>
+<section id="exploración-de-la-interfaz-de-orange" class="level2">
+<h2 class="anchored" data-anchor-id="exploración-de-la-interfaz-de-orange">1. Exploración de la interfaz de Orange</h2>
+<div class="objective-card">
+<p>🎯 <strong>Objetivo:</strong> Familiarizarse con la interfaz gráfica y widgets.</p>
+</div>
+<p>En esta actividad exploraremos la interfaz de Orange y sus principales componentes. <img src="_resources/images/orangefront.png" class="img-center img-fluid"></p>
+<p>Para ello comienza haciendo lo siguiente:</p>
 <ol type="1">
-<li>Abre cualquier editor de texto como <strong>Notepad</strong>, <strong>VS Code</strong> o <strong>Sublime Text</strong>.<br>
-</li>
-<li>Copia el siguiente contenido en un nuevo archivo:</li>
+<li>Abre la aplicación Orange y explora la interfaz.</li>
+<li>Examina las categorías de widgets: <strong>Data</strong>, <strong>Visualize</strong>, <strong>Model</strong>, <strong>Evaluate</strong>.</li>
+<li>Arrastra 2-3 widgets de diferentes categorías al lienzo (por ejemplo, <strong>File</strong>, <strong>Scatter Plot</strong>, <strong>Test &amp; Score</strong>).</li>
+<li>Conecta los widgets y observa cómo fluye la información entre ellos.</li>
+<li>Explora las opciones de configuración de cada widget.</li>
 </ol>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> orange3</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">channels</span><span class="kw">:</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> conda-forge</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> defaults</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dependencies</span><span class="kw">:</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> python=3.9</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> attrs</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> orange3</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> lightfm</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> opencv</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> scikit-image</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> nltk</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> spacy</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> scikit-surprise</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> orange3-recommendation</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<ol start="3" type="1">
-<li>Guarda el archivo como <strong><code>orange3-env.yml</code></strong> en una ubicación fácil de encontrar.</li>
-</ol>
-<hr>
-</section>
-<section id="paso-2-crear-el-entorno-conda" class="level1">
-<h1>Paso 2: Crear el entorno Conda</h1>
-<p>Ahora usaremos el archivo <code>.yml</code> para crear el entorno.</p>
+<div class="question-card">
+<p>📝 <strong>Preguntas:</strong></p>
 <ol type="1">
-<li>Abre tu terminal (o Anaconda Prompt en Windows).<br>
-</li>
-<li>Navega a la carpeta donde guardaste el archivo:</li>
+<li>¿Qué permite hacer cada categoría?</li>
+<li>¿Qué ventajas observas de trabajar visualmente con flujos de trabajo? <!-- Ocultar --> &lt;!– 1. <strong>Data:</strong> Permite cargar, explorar y preparar los datos antes del análisis.</li>
 </ol>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ruta/del/archivo</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<ol start="3" type="1">
-<li>Ejecuta el siguiente comando para crear el entorno:</li>
-</ol>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env create <span class="at">-f</span> orange3-env.yml</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<hr>
-</section>
-<section id="paso-3-activar-el-entorno" class="level1">
-<h1>Paso 3: Activar el entorno</h1>
-<p>Una vez creado el entorno, actívalo con:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate orange3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<hr>
-</section>
-<section id="paso-4-iniciar-orange3" class="level1">
-<h1>Paso 4: Iniciar Orange3</h1>
-<p>Finalmente, para abrir Orange3 ejecuta:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">orange-canvas</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Este comando abrirá la interfaz gráfica de Orange3. 🎉</p>
-<hr>
-</section>
-<section id="notas-y-consejos" class="level1">
-<h1>Notas y consejos</h1>
 <ul>
-<li><p>Si ya tenías un entorno llamado <code>orange3</code>, Conda puede pedirte que lo elimines o actualices.<br>
-</p></li>
-<li><p>Las librerías incluidas (por ejemplo, <code>lightfm</code>, <code>scikit-surprise</code>, <code>spacy</code>) son opcionales pero útiles para los laboratorios de sistemas de recomendación y PLN.<br>
-</p></li>
-<li><p>Puedes eliminar el entorno más adelante con:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> remove <span class="at">--name</span> orange3 <span class="at">--all</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><strong>Visualize:</strong> Ofrece herramientas para representar gráficamente los datos y descubrir patrones.</li>
+<li><strong>Model:</strong> Facilita la aplicación de algoritmos de aprendizaje automático para construir modelos.</li>
+<li><strong>Evaluate:</strong> Permite comparar y validar el rendimiento de los modelos generados.</li>
 </ul>
+<ol start="2" type="1">
+<li>Trabajar visualmente con flujos de trabajo ayuda a entender mejor cada paso del análisis, facilita la experimentación y permite identificar rápidamente errores o mejoras en el proceso. –&gt;</li>
+</ol>
+</div>
+<hr>
+</section>
+<section id="carga-de-datos-y-visualización-básica" class="level2">
+<h2 class="anchored" data-anchor-id="carga-de-datos-y-visualización-básica">2. Carga de datos y visualización básica</h2>
+<div class="objective-card">
+<p>🎯 <strong>Objetivo:</strong> Aprender a cargar datasets y visualizar sus contenidos.</p>
+</div>
+<p><img src="_resources/images/titanic.gif" class="img-right img-fluid" alt="Source: Loofandjimmy.com"> En esta actividad deberás aprender a cargar un conjunto de datos en Orange y explorar su contenido utilizando los widgets disponibles. Para ello:</p>
+<ol type="1">
+<li>Arrastra el widget <strong>File</strong> al lienzo y selecciona el archivo de datos proporcionado (<code>titanic.tab</code>, <code>heart_disease.tab</code>).</li>
+<li>Conecta el widget <strong>File</strong> al widget <strong>Data Table</strong> para visualizar el dataset.</li>
+<li>Observa las columnas (atributos), filas (instancias) y los tipos de variables presentes en el conjunto de datos.</li>
+<li>Conecta el widget <strong>File</strong> al widget <strong>Data Info</strong> para obtener un resumen del dataset, incluyendo número de filas, columnas, tipos de variables y valores ausentes.</li>
+</ol>
+<p>Esta exploración inicial te permitirá familiarizarte con la carga y visualización de datos en Orange, así como identificar posibles problemas que podrían afectar el análisis posterior.</p>
+<div class="question-card">
+<p>📝 <strong>Preguntas:</strong></p>
+<ol type="1">
+<li>¿Cuántas columnas y filas tiene el dataset?</li>
+<li>¿Qué tipo de variables (categóricas, numéricas) puedes identificar?</li>
+<li>¿Cuál es el propósito de la variable objetivo en este análisis?</li>
+<li>¿Existen valores ausentes o inconsistentes en los datos? ¿Cómo los identificaste?</li>
+<li>¿Por qué es importante revisar los datos antes de aplicar modelos?</li>
+</ol>
+<!-- Ocultar -->
+<!-- 1. El dataset `titanic.tab` tiene 7 columnas y 2201 filas, el dataset `iris.tab` tiene 5 columnas y 150 filas.
+2. Las variables pueden ser categóricas (por ejemplo, `Survived` en `titanic.tab`) o numéricas (por ejemplo, `Age` en `titanic.tab`).
+3. La variable objetivo es la que queremos predecir o clasificar (por ejemplo, `Survived` indica si un pasajero sobrevivió o no).
+4. Puedes identificar valores ausentes observando celdas vacías en el widget Data Table o usando el widget Data Info.
+5. Revisar los datos es crucial para asegurar la calidad del análisis, evitar sesgos y mejorar el rendimiento de los modelos. -->
+</div>
+<hr>
+</section>
+<section id="clasificación-de-tipos-de-variables" class="level2">
+<h2 class="anchored" data-anchor-id="clasificación-de-tipos-de-variables">3. Clasificación de tipos de variables</h2>
+<div class="objective-card">
+<p>🎯 <strong>Objetivo:</strong> Diferenciar variables categóricas, numéricas y la variable objetivo.</p>
+</div>
+<p><img src="_resources/images/counting.gif" class="img-right img-fluid" alt="Figura: Counting error"> En esta actividad vas a identificar y clasificar los tipos de variables presentes en el conjunto de datos, diferenciando entre variables categóricas, numéricas y la variable objetivo (<strong>target</strong>). Esto es fundamental para entender cómo se pueden utilizar los datos en modelos de aprendizaje automático y para seleccionar correctamente la variable que se desea predecir.</p>
+<p>Para ello, realiza los siguientes pasos:</p>
+<ol type="1">
+<li>Observa el dataset cargado en el widget <strong>Data Table</strong> y revisa cada columna.</li>
+<li>Utiliza el widget <strong>Data Info</strong> para obtener un resumen de los tipos de variables presentes (categóricas, numéricas, etc.).</li>
+<li>Analiza los nombres y valores de las columnas para identificar cuál podría ser la variable objetivo (la que se desea predecir).</li>
+</ol>
+<div class="question-card">
+<p>📝 <strong>Preguntas:</strong></p>
+<ol type="1">
+<li>¿Cuáles son las variables categóricas y cuáles son numéricas en el dataset?<br>
+</li>
+<li>¿Qué problemas podrían surgir si se elige otra variable como objetivo?<br>
+</li>
+<li>¿Cómo afecta la selección de la variable objetivo al tipo de modelo que se puede aplicar posteriormente?</li>
+</ol>
+<!-- Ocultar -->
+<!-- 1. Las variables categóricas en `titanic.tab` incluyen `Survived`, `Pclass`, `Sex`, `Embarked`, mientras que las numéricas incluyen `Age`, `SibSp`, `Parch`, `Fare`.  
+2. La variable objetivo es `Survived` porque indica si un pasajero sobrevivió
+o no, lo cual es relevante para el análisis de supervivencia en el Titanic.
+3. Elegir otra variable como objetivo, como `Age`, podría no tener sentido en el contexto del análisis y podría llevar a modelos menos útiles o interpretables.  
+4. La selección de la variable objetivo determina el tipo de problema (clasificación o regresión) y, por ende, los algoritmos y técnicas que se pueden aplicar posteriormente. -->
+</div>
+<hr>
+</section>
+<section id="visualización-de-distribuciones" class="level2">
+<h2 class="anchored" data-anchor-id="visualización-de-distribuciones">4. Visualización de distribuciones</h2>
+<div class="objective-card">
+<p>🎯 <strong>Objetivo:</strong> Explorar cómo se distribuyen los valores de las variables.</p>
+</div>
+<p>Vas ahora a visualizar las distribuciones de las variables en el conjunto de datos para entender mejor su comportamiento y características. Esto te ayudará a identificar patrones, tendencias y posibles problemas como desbalances en las clases.</p>
+<p><img src="_resources/images/gauss.png" class="img-center img-fluid"></p>
+<p>Comienza haciendo lo siguiente:</p>
+<ol type="1">
+<li>Arrastra el widget <strong>Distributions</strong> al lienzo y conéctalo al widget <strong>File</strong> o <strong>Select Columns</strong>.</li>
+<li>Selecciona una variable numérica para ver su histograma y una variable categórica para ver su gráfico de barras.</li>
+<li>Observa la forma de las distribuciones, la presencia de valores atípicos y la frecuencia de cada categoría.</li>
+<li>Repite el proceso para varias variables importantes en el dataset, incluyendo la variable objetivo.</li>
+<li>Prueba a hacer este estudio usando el widget <strong>Feature Statistics</strong>.</li>
+</ol>
+<div class="question-card">
+<p>📝 <strong>Preguntas:</strong></p>
+<ol type="1">
+<li>¿Qué variables parecen más relevantes?<br>
+</li>
+<li>¿Cómo afecta un desbalanceo al entrenamiento del modelo?</li>
+<li>¿Qué observas sobre la presencia de valores atípicos en las variables numéricas?<br>
+</li>
+<li>¿Cómo puede influir la distribución de las variables en la elección de técnicas de preprocesamiento y modelado? <!-- Ocultar --> &lt;!– 1. Las variables con distribuciones más variadas o con mayor impacto en la variable objetivo suelen ser más relevantes.<br>
+</li>
+<li>Un desbalanceo en las clases puede llevar a que el modelo aprenda a predecir siempre la clase mayoritaria, afectando negativamente su rendimiento.<br>
+</li>
+<li>La presencia de valores atípicos puede distorsionar las estadísticas descriptivas y afectar el rendimiento del modelo.<br>
+</li>
+<li>La distribución de las variables influye en la elección de técnicas como normalización, estandarización o transformación de datos. –&gt;</li>
+</ol>
+</div>
+<hr>
+</section>
+<section id="relaciones-entre-variables" class="level2">
+<h2 class="anchored" data-anchor-id="relaciones-entre-variables">5. Relaciones entre variables</h2>
+<div class="objective-card">
+<p>🎯 <strong>Objetivo:</strong> Observar patrones y correlaciones entre variables.</p>
+<!-- La figura debe mostrar un Scatter Plot de dos variables numéricas coloreadas por la variable objetivo -->
+</div>
+<p>En esta actividad explorarás las relaciones entre diferentes variables en el conjunto de datos para identificar patrones, correlaciones y posibles interacciones que puedan ser relevantes para el análisis. Esto es crítico para entender cómo las variables se relacionan entre sí y cómo pueden influir en la variable objetivo.</p>
+<p><img src="_resources/images/spiderman.jpg" class="img-center img-fluid"></p>
+<p>En este caso, realiza los siguientes pasos:</p>
+<ol type="1">
+<li>Arrastra el widget <strong>Scatter Plot</strong> al lienzo y conéctalo al widget <strong>File</strong> o <strong>Select Columns</strong>.</li>
+<li>Selecciona dos variables numéricas para el eje X y el eje Y.</li>
+<li>Colorea los puntos según la variable objetivo para observar cómo se distribuyen las clases.</li>
+<li>Experimenta con diferentes pares de variables para descubrir otras relaciones interesantes.</li>
+</ol>
+<div class="question-card">
+<p>📝 <strong>Preguntas:</strong></p>
+<ol type="1">
+<li>¿Se observan agrupaciones o separaciones claras entre clases?¿Qué quiere decir esto?</li>
+<li>Interpreta los patrones vistos en los diagramas de dispersión.</li>
+<li>¿Qué relaciones entre variables podrían ser útiles para predecir la variable objetivo?<br>
+</li>
+<li>¿Cómo podrían estas relaciones influir en la selección de características para el modelado? <!-- Ocultar --> &lt;!– 1. Si se observan agrupaciones claras, indica que las variables seleccionadas tienen un buen poder discriminativo para la variable objetivo.<br>
+</li>
+<li>Los patrones pueden indicar correlaciones positivas o negativas entre variables, así como la presencia de outliers.<br>
+</li>
+<li>Relaciones fuertes entre variables y la variable objetivo pueden ser útiles para mejorar la precisión del modelo.</li>
+<li>Estas relaciones pueden guiar la selección de características, ayudando a elegir variables que aporten información relevante y descartando las redundantes o irrelevantes. –&gt;</li>
+</ol>
+</div>
+<hr>
+</section>
+<section id="personalización-del-análisis" class="level2">
+<h2 class="anchored" data-anchor-id="personalización-del-análisis">6. Personalización del análisis</h2>
+<div class="objective-card">
+<p>🎯 <strong>Objetivo:</strong> Seleccionar sólo las variables relevantes y mejorar el flujo de trabajo. <!-- La figura debe mostrar cómo seleccionar columnas relevantes y ocultar las no informativas --></p>
+</div>
+<p><img src="_resources/images/selection.gif" class="img-right img-fluid" alt="Figura: Selection"> Como acabamos de ver no todas las variables en un conjunto de datos son igualmente útiles para el análisis o modelado. En esta actividad, aprenderás a seleccionar y enfocarte en las variables más relevantes, mejorando así la eficiencia y efectividad del análisis. Lo puedes hacer siguiendo estos pasos:</p>
+<ol type="1">
+<li>Usa el widget <strong>Select Columns</strong> para elegir las variables que consideres más importantes basándote en las visualizaciones previas.!</li>
+<li>Oculta columnas que no aporten información relevante (por ejemplo, identificadores únicos, nombres, etc.).<br>
+</li>
+<li>Cambia la variable objetivo si es necesario y observa cómo afecta al análisis en los widgets conectados.</li>
+<li>Revisa y ajusta el flujo de trabajo para enfocarte en las variables seleccionadas.</li>
+</ol>
+<div class="question-card">
+<p>📝 <strong>Preguntas:</strong></p>
+<ol type="1">
+<li>¿Qué criterios usaste para seleccionar las variables relevantes?<br>
+</li>
+<li>¿Cómo afectó esto a las visualizaciones y al análisis?</li>
+<li>¿Qué aprendiste sobre la importancia de la selección de variables en el análisis de datos?<br>
+</li>
+<li>¿Qué pasos seguirías para validar que las variables seleccionadas son las más adecuadas?</li>
+</ol>
+<!-- Ocultar -->
+<!-- 1. Los criterios pueden incluir la relevancia para la variable objetivo, la variabilidad de la variable, la ausencia de valores nulos y la no redundancia con otras variables.  
+2. La selección de variables relevantes puede mejorar la claridad de las visualizaciones y facilitar la identificación de patrones.  
+3. La selección adecuada de variables es crucial para mejorar el rendimiento del modelo y evitar el sobreajuste.  
+4. Podrías usar técnicas de selección de características, validación cruzada y análisis de importancia de variables.   -->
+</div>
+<hr>
+</section>
+<section id="detección-de-problemas-en-los-datos" class="level2">
+<h2 class="anchored" data-anchor-id="detección-de-problemas-en-los-datos">7. Detección de problemas en los datos</h2>
+<div class="objective-card">
+<p>🎯 <strong>Objetivo:</strong> Identificar valores ausentes y otras irregularidades. <!-- La figura debe mostrar un resumen del dataset, incluyendo número de filas, columnas, valores ausentes, etc. --></p>
+</div>
+<p><img src="_resources/images/error.jpg" class="img-right img-fluid" alt="Figura: Error"> Finalmente, es fundamental detectar y manejar problemas comunes en los datos, como valores ausentes, inconsistencias o errores. Estos problemas pueden afectar negativamente el análisis y la construcción de modelos si no se abordan adecuadamente.</p>
+<p>Comprobarás esto utilizando la base de datos <code>heart_disease.tab</code> y siguiendo los siguientes pasos:</p>
+<ol type="1">
+<li>Arrastra el widget <strong>Data Info</strong> al lienzo y conéctalo al widget <strong>File</strong> o <strong>Select Columns</strong>.</li>
+<li>Revisa el resumen del dataset que proporciona <strong>Data Info</strong>, prestando atención a:
+<ul>
+<li>Número de filas y columnas.</li>
+<li>Tipos de variables.</li>
+<li>Valores ausentes o inconsistentes.</li>
+</ul></li>
+<li>Identifica cualquier problema potencial en los datos.</li>
+<li>Considera estrategias para tratar estos problemas, como rellenar valores ausentes, eliminar filas o columnas, o transformar datos.</li>
+</ol>
+<div class="question-card">
+<p>📝 <strong>Preguntas:</strong></p>
+<ol type="1">
+<li>¿Qué problemas encontraste en los datos?<br>
+</li>
+<li>¿Qué estrategias propondrías para manejar valores ausentes o inconsistencias?</li>
+<li>¿Cómo decidirías entre eliminar datos o imputar valores?<br>
+</li>
+<li>¿Qué consecuencias puede tener ignorar valores perdidos?</li>
+</ol>
+<!-- Ocultar -->
+<!-- 1. Podrías encontrar valores ausentes en columnas importantes, inconsistencias en categorías o errores tipográficos.  
+2. Estrategias incluyen imputación (media, mediana, moda), eliminación de filas/columnas, o uso de modelos predictivos para rellenar valores.  
+3. La decisión depende del porcentaje de datos ausentes, la importancia de la variable y el impacto en el análisis.
+4. Ignorar valores perdidos puede llevar a sesgos en los resultados y a una menor precisión en los modelos. -->
+</div>
+<hr>
+</section>
+</section>
+<section id="nota-final" class="level1">
+<h1>Nota final</h1>
+<div class="final-note-card">
+<p>🎉 ¡Enhorabuena por el excelente trabajo! Ahora comprendes mejor la importancia de explorar y analizar los datos antes de modelar.<br>
+Antes de terminar, recuerda <strong>guardar</strong> tu flujo de trabajo con <strong>File &gt; Save As…</strong> para poder retomarlo fácilmente en el futuro y seguir aprendiendo.</p>
+</div>
+<div class="submission-card">
+<p><strong>📤 C&oacute;mo entregar</strong></p>
+<ul>
+<li>Guarda/exporta tu informe completado como PDF.</li>
+<li>Renombra el archivo PDF siguiendo la convenci&oacute;n de abajo.</li>
+<li>Ve a Aula Global &rarr; esta asignatura &rarr; Tareas &rarr; buz&oacute;n de entrega &ldquo;Lab 1&rdquo;, y sube el PDF antes de la fecha l&iacute;mite.</li>
+<li>Adjunta tambi&eacute;n tu archivo de flujo de trabajo de Orange (.ows, guardado con Archivo &gt; Guardar como&hellip; en Orange) en la misma entrega.</li>
+</ul>
+<p>Nombre del archivo: <span class="filename-example">Lab1_Apellido1_Nombre1_Apellido2_Nombre2.pdf</span> (ej. <span class="filename-example">Lab1_Garcia_Maria_Fernandez_Juan.pdf</span>)</p>
+</div>
+</section>
+<section id="explora-los-laboratorios" class="level1 unnumbered unlisted margin lab-hidden">
+<h1 class="unnumbered unlisted">Explora los Laboratorios</h1>
+<div class="lab-grid">
+  <a href="./lab1.es.html" class="lab-card lab-hidden lab-hidden-1">
+    <div class="card-inner">
+      <img src="_resources/images/lab1.jpg" alt="Lab 1">
+      <div class="overlay">
+        <div class="overlay-text">
+          <h3 class="anchored" data-anchor-id="explora-los-laboratorios">Laboratorio 1</h3>
+          <span class="subtitle">Introducción a Orange y Manejo de Datos</span>
+        </div>
+      </div>
+    </div>
+  </a>
+  <a href="./lab2.es.html" class="lab-card lab-hidden lab-hidden-2">
+    <div class="card-inner">
+      <img src="_resources/images/lab2.jpg" alt="Lab 2">
+      <div class="overlay">
+        <div class="overlay-text">
+          <h3 class="anchored">Laboratorio 2</h3>
+          <span class="subtitle">Preprocesamiento de Datos</span>
+        </div>
+      </div>
+    </div>
+  </a>
+  <a href="./lab3.es.html" class="lab-card lab-hidden lab-hidden-3">
+    <div class="card-inner">
+      <img src="_resources/images/lab3.jpg" alt="Lab 3">
+      <div class="overlay">
+        <div class="overlay-text">
+          <h3 class="anchored">Laboratorio 3</h3>
+          <span class="subtitle">Problemas de Regresión</span>
+        </div>
+      </div>
+    </div>
+  </a>
+  <a href="./lab4.es.html" class="lab-card lab-hidden lab-hidden-4">
+    <div class="card-inner">
+      <img src="_resources/images/lab4.jpg" alt="Lab 4">
+      <div class="overlay">
+        <div class="overlay-text">
+          <h3 class="anchored">Laboratorio 4</h3>
+          <span class="subtitle">Problemas de Clasificación</span>
+        </div>
+      </div>
+    </div>
+  </a>
+  <a href="./lab5.es.html" class="lab-card lab-hidden lab-hidden-5">
+    <div class="card-inner">
+      <img src="_resources/images/lab5.jpg" alt="Lab 5">
+      <div class="overlay">
+        <div class="overlay-text">
+          <h3 class="anchored">Laboratorio 5</h3>
+          <span class="subtitle">Aprendizaje No Supervisado</span>
+        </div>
+      </div>
+    </div>
+  </a>
+  <a href="./lab6.es.html" class="lab-card lab-hidden lab-hidden-6">
+    <div class="card-inner">
+      <img src="_resources/images/lab6.jpg" alt="Lab 6">
+      <div class="overlay">
+        <div class="overlay-text">
+          <h3 class="anchored">Laboratorio 6</h3>
+          <span class="subtitle">Sistemas de Recomendación</span>
+        </div>
+      </div>
+    </div>
+  </a>
+</div>
+</section>
 
 
-</section>
 
 </main> <!-- /main -->
 <script>
