@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Lab session 1: Introduction to Orange and data handling – Computation and Intelligence</title>
+<title>Lab session 2: Data preprocessing – Computation and Intelligence</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -72,6 +72,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -101,12 +130,12 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="./setup.html"> 
 <span class="menu-text">🔧 Setup</span></a>
   </li>  
-  <li class="nav-item dropdown">
+  <li class="nav-item dropdown lab-hidden">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-labs" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">🔬 Labs</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-labs">    
-        <li>
+        <li class="lab-hidden lab-hidden-1">
     <a class="dropdown-item" href="./lab1.html">
  <span class="dropdown-text">Lab 1</span></a>
   </li>  
@@ -156,14 +185,28 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#session-objectives" id="toc-session-objectives" class="nav-link active" data-scroll-target="#session-objectives">Session objectives</a></li>
   <li><a href="#proposed-activities" id="toc-proposed-activities" class="nav-link" data-scroll-target="#proposed-activities">Proposed activities</a>
   <ul>
-  <li><a href="#exploring-oranges-interface" id="toc-exploring-oranges-interface" class="nav-link" data-scroll-target="#exploring-oranges-interface">1. Exploring Orange’s interface</a></li>
-  <li><a href="#loading-data-and-basic-visualization" id="toc-loading-data-and-basic-visualization" class="nav-link" data-scroll-target="#loading-data-and-basic-visualization">2. Loading data and basic visualization</a></li>
-  <li><a href="#classifying-variable-types" id="toc-classifying-variable-types" class="nav-link" data-scroll-target="#classifying-variable-types">3. Classifying variable types</a></li>
-  <li><a href="#visualizing-distributions" id="toc-visualizing-distributions" class="nav-link" data-scroll-target="#visualizing-distributions">4. Visualizing distributions</a></li>
-  <li><a href="#relationships-between-variables" id="toc-relationships-between-variables" class="nav-link" data-scroll-target="#relationships-between-variables">5. Relationships between variables</a></li>
-  <li><a href="#customizing-the-analysis" id="toc-customizing-the-analysis" class="nav-link" data-scroll-target="#customizing-the-analysis">6. Customizing the analysis</a></li>
-  <li><a href="#detecting-data-problems" id="toc-detecting-data-problems" class="nav-link" data-scroll-target="#detecting-data-problems">7. Detecting data problems</a></li>
+  <li><a href="#data-cleaning" id="toc-data-cleaning" class="nav-link" data-scroll-target="#data-cleaning">1. Data cleaning</a></li>
+  <li><a href="#data-partitions" id="toc-data-partitions" class="nav-link" data-scroll-target="#data-partitions">2. Data partitions</a>
+  <ul>
+  <li><a href="#random-partitions" id="toc-random-partitions" class="nav-link" data-scroll-target="#random-partitions">2.1 Random partitions</a></li>
+  <li><a href="#stratified-partitions" id="toc-stratified-partitions" class="nav-link" data-scroll-target="#stratified-partitions">2.2 Stratified partitions</a></li>
+  <li><a href="#cross-validation" id="toc-cross-validation" class="nav-link" data-scroll-target="#cross-validation">2.3 Cross-validation</a></li>
+  <li><a href="#validation-set" id="toc-validation-set" class="nav-link" data-scroll-target="#validation-set">2.4 Validation set</a></li>
   </ul></li>
+  <li><a href="#data-normalization" id="toc-data-normalization" class="nav-link" data-scroll-target="#data-normalization">3. Data normalization</a>
+  <ul>
+  <li><a href="#min-max-normalization" id="toc-min-max-normalization" class="nav-link" data-scroll-target="#min-max-normalization">3.1 Min-Max normalization</a></li>
+  <li><a href="#standardization" id="toc-standardization" class="nav-link" data-scroll-target="#standardization">3.2 Standardization</a></li>
+  <li><a href="#outlier-effects-on-normalization" id="toc-outlier-effects-on-normalization" class="nav-link" data-scroll-target="#outlier-effects-on-normalization">3.3 Outlier effects on normalization</a></li>
+  <li><a href="#normalization-and-data-partitions" id="toc-normalization-and-data-partitions" class="nav-link" data-scroll-target="#normalization-and-data-partitions">3.4 Normalization and data partitions</a></li>
+  </ul></li>
+  <li><a href="#data-imputation" id="toc-data-imputation" class="nav-link" data-scroll-target="#data-imputation">4. Data imputation</a>
+  <ul>
+  <li><a href="#removing-missing-values" id="toc-removing-missing-values" class="nav-link" data-scroll-target="#removing-missing-values">4.1 Removing missing values</a></li>
+  <li><a href="#imputing-missing-values" id="toc-imputing-missing-values" class="nav-link" data-scroll-target="#imputing-missing-values">4.2 Imputing missing values</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#mini-project-preparing-data-for-modeling" id="toc-mini-project-preparing-data-for-modeling" class="nav-link" data-scroll-target="#mini-project-preparing-data-for-modeling">Mini-project: Preparing data for modeling</a></li>
   <li><a href="#final-note" id="toc-final-note" class="nav-link" data-scroll-target="#final-note">Final note</a></li>
   </ul>
 </nav>
@@ -177,7 +220,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Lab session 1: Introduction to Orange and data handling</h1>
+<h1 class="title">Lab session 2: Data preprocessing</h1>
 </div>
 
 
@@ -197,230 +240,299 @@ ul.task-list li input[type="checkbox"] {
 <section id="session-objectives" class="level1">
 <h1>Session objectives</h1>
 <div class="objective-card">
-<p>🎯 <strong>General objective:</strong><br>
-Get familiar with the <strong>Orange Data Mining</strong> tool and learn how to explore and handle data before applying models.</p>
+<p>🎯 <strong>General objective:</strong> Learn how to prepare and preprocess data before modeling, ensuring that the datasets we work with are consistent, meaningful, and ready for machine learning algorithms.</p>
 </div>
-<p><img src="_resources/images/orange.jpg" class="img-right img-fluid"> Orange Data Mining lets you build visual workflows to analyze data, explore relationships between variables, and prepare datasets for modeling.<br>
-It is a free software platform aimed at teaching and experimenting with data science and machine learning. Its intuitive graphical interface allows dragging and connecting widgets to perform tasks like loading data, visualization, preprocessing, modeling, and evaluating results without programming.<br>
-Orange also offers extensions for advanced analysis, text mining, bioinformatics, and interactive visualizations, facilitating learning and exploration of modern AI techniques.</p>
-<p>In this session we will focus on:</p>
-<ul>
-<li>Learning to navigate Orange’s interface and main widget categories.</li>
-<li>Loading and inspecting real datasets.</li>
-<li>Identifying and classifying variable types in the data.</li>
-<li>Visualizing distributions and relationships between variables to discover patterns.</li>
-<li>Selecting relevant features and tailoring the analysis.</li>
-<li>Detecting common data issues such as missing values or inconsistencies.</li>
-</ul>
-<p>These skills are fundamental for exploratory analysis and preparing data before applying machine learning algorithms.</p>
-<p><strong>Let’s get started!</strong></p>
+<p><img src="_resources/images/processing.gif" class="img-right img-fluid"></p>
+<p>In real-world projects, data quality largely determines model quality. No matter how sophisticated an algorithm may be, poor data input will inevitably lead to unreliable predictions. Preprocessing is the stage where we clean, transform, and structure data so that models can learn effectively and without distortions.</p>
+<p>In this session, we will develop an understanding of why preprocessing is essential, and then apply it in practice. You will see how to identify and select relevant attributes, deal with missing values, normalize variables that exist on very different scales, and investigate the effect of outliers. You will also learn why it is crucial to separate data into training and test subsets before evaluation. Finally, you will compare raw and preprocessed datasets to appreciate how much difference these steps make in practice. Mastering these ideas will help you avoid common mistakes such as data leakage, biased models, or overfitting.</p>
 <hr>
 </section>
 <section id="proposed-activities" class="level1">
 <h1>Proposed activities</h1>
+<p>Throughout these activities, you will work with dataset <code>Chronic Kidney Disease</code>. This dataset contains information about patients with chronic kidney disease, including various medical and demographic attributes. It is a common benchmark for classification tasks, where the goal is to predict the presence or absence of the disease based on other variables. You can download it from <a href="https://www.kaggle.com/datasets/mansoordaku/ckdisease/download">this link</a> and can find an explanation of each attribute from <a href="https://archive.ics.uci.edu/dataset/336/chronic+kidney+disease">UCI</a>. Load the dataset as we did in the previous session (using the <strong>CSV File Import</strong> widget). Once you are ready, we can start preprocessing it!</p>
+<hr>
+<section id="data-cleaning" class="level2">
+<h2 class="anchored" data-anchor-id="data-cleaning">1. Data cleaning</h2>
 <div class="objective-card">
-<p>⚠️ <strong>Note:</strong> every activity below must be done <strong>twice</strong> — once with <code>titanic.tab</code> and once with <code>heart_disease.tab</code> — so you can compare an all-categorical dataset against one with real numeric variables.</p>
+<p>🎯 <strong>Objective:</strong> Identify and handle text categories.</p>
 </div>
-<section id="exploring-oranges-interface" class="level2">
-<h2 class="anchored" data-anchor-id="exploring-oranges-interface">1. Exploring Orange’s interface</h2>
-<div class="objective-card">
-<p>🎯 <strong>Objective:</strong> Get familiar with the graphical interface and widgets.</p>
-</div>
-<p>In this activity we will explore Orange’s interface and main components. <img src="_resources/images/orangefront.png" class="img-center img-fluid"></p>
-<p>To do this, start by:</p>
-<ol type="1">
-<li>Open the Orange application and explore the interface.</li>
-<li>Examine the widget categories: <strong>Data</strong>, <strong>Visualize</strong>, <strong>Model</strong>, <strong>Evaluate</strong>.</li>
-<li>Drag 2–3 widgets from different categories onto the canvas (for example, <strong>File</strong>, <strong>Scatter Plot</strong>, <strong>Test &amp; Score</strong>).</li>
-<li>Connect the widgets and observe how data flows between them.</li>
-<li>Explore each widget’s configuration options.</li>
-</ol>
+<p>The first step in preprocessing is to ensure that the data is clean and consistent. This involves identifying and handling text categories, as well as ensuring that categorical variables are properly formatted.</p>
+<p><img src="_resources/images/cleaning.jpg" class="img-right img-fluid"></p>
+<p>Visualize the content of the dataset and find any errors that might have ocurred during data collection. Identify any text categories and look for variables that contain text data, such as “yes”/“no” or other categorical values and make sure the unique values are correctly encoded. You can use the <strong>Edit Domain</strong> widget to rename or recode these categories if necessary. There might be inconsistencies in how categories are represented (e.g., “yes”, “Yes”, “YES”). Standardize these entries to ensure uniformity.</p>
+<p>Make sure the correct variable is set as the target variable (the one you want to predict). In this case, it should be the variable indicating the presence or absence of Chronic Kidney Disease (CKD). You can use the <strong>Select Columns</strong> widget to set the target variable appropriately.</p>
 <div class="question-card">
 <p>📝 <strong>Questions:</strong></p>
 <ol type="1">
-<li>What does each category allow you to do?</li>
-<li>What advantages do you observe when working visually with workflows?</li>
+<li>Are there any inconsistencies in the text categories? If so, how did you standardize them?</li>
+<li>Which variable did you set as the target variable, and why?</li>
+<li>Did you find any other issues in the dataset that needed to be addressed? If so, what were they?</li>
 </ol>
 </div>
+<!-- Solution
+1. Yes, there were inconsistencies such as "yes", "Yes", and "YES". I standardized them all to "yes" using the Edit Domain widget.
+2. I set the variable indicating the presence or absence of CKD as the target variable because it is the outcome we want to predict.
+3. I found some missing values in certain attributes, which I will address in the next step
+    -->
 <hr>
 </section>
-<section id="loading-data-and-basic-visualization" class="level2">
-<h2 class="anchored" data-anchor-id="loading-data-and-basic-visualization">2. Loading data and basic visualization</h2>
+<section id="data-partitions" class="level2">
+<h2 class="anchored" data-anchor-id="data-partitions">2. Data partitions</h2>
 <div class="objective-card">
-<p>🎯 <strong>Objective:</strong> Learn to load datasets and inspect their contents.</p>
+<p>🎯 <strong>Objective:</strong> Understand the importance of making partitions in the dataset.</p>
 </div>
-<p>In this activity you will learn to load a dataset in Orange and explore its content using available widgets. To do this:<img src="_resources/images/titanic.gif" class="img-right img-fluid" alt="Source: Loofandjimmy.com"></p>
-<ol type="1">
-<li>Drag the <strong>File</strong> widget onto the canvas and select the provided data file (<code>titanic.tab</code>, <code>heart_disease.tab</code>).</li>
-<li>Connect the <strong>File</strong> widget to the <strong>Data Table</strong> widget to view the dataset.</li>
-<li>Inspect the columns (attributes), rows (instances), and variable types in the dataset.</li>
-<li>Connect the <strong>File</strong> widget to the <strong>Data Info</strong> widget to get a dataset summary, including number of rows, columns, variable types, and missing values.</li>
-</ol>
-<p>This initial exploration will help you get familiar with loading and viewing data in Orange, and identify potential problems that could affect later analysis.</p>
-<div class="question-card">
-<p>📝 <strong>Questions:</strong></p>
-<ol type="1">
-<li>How many columns and rows does the dataset have?</li>
-<li>What types of variables (categorical, numerical) can you identify?</li>
-<li>What is the purpose of the target variable in this analysis?</li>
-<li>Are there missing or inconsistent values in the data? How did you identify them?</li>
-<li>Why is it important to review the data before applying models?</li>
-</ol>
-</div>
-<hr>
-</section>
-<section id="classifying-variable-types" class="level2">
-<h2 class="anchored" data-anchor-id="classifying-variable-types">3. Classifying variable types</h2>
-<div class="objective-card">
-<p>🎯 <strong>Objective:</strong> Distinguish categorical variables, numerical variables, and the target variable.</p>
-</div>
-<p><img src="_resources/images/counting.gif" class="img-right img-fluid" alt="Figure: Counting error"> In this activity you will identify and classify variable types in the dataset, distinguishing between categorical, numerical, and the target (<strong>target</strong>) variables. This is essential to understand how data can be used in machine learning models and to correctly choose the variable you want to predict.</p>
-<p>Steps:</p>
-<ol type="1">
-<li>Inspect the dataset in the <strong>Data Table</strong> widget and review each column.</li>
-<li>Use the <strong>Data Info</strong> widget to obtain a summary of variable types (categorical, numerical, etc.).</li>
-<li>Analyze column names and values to identify which could be the target variable.</li>
-</ol>
-<div class="question-card">
-<p>📝 <strong>Questions:</strong></p>
-<ol type="1">
-<li>Which variables are categorical and which are numerical in the dataset?<br>
-</li>
-<li>What problems might arise if you select a different variable as the target?<br>
-</li>
-<li>How does the choice of target variable affect the type of model you can apply later?</li>
-</ol>
-</div>
-<hr>
-</section>
-<section id="visualizing-distributions" class="level2">
-<h2 class="anchored" data-anchor-id="visualizing-distributions">4. Visualizing distributions</h2>
-<div class="objective-card">
-<p>🎯 <strong>Objective:</strong> Explore how variable values are distributed.</p>
-</div>
-<p>Now you will visualize variable distributions to better understand their behavior and characteristics. This helps identify patterns, trends, and potential issues like class imbalance.</p>
-<p><img src="_resources/images/gauss.png" class="img-center img-fluid"></p>
-<p>Start by:</p>
-<ol type="1">
-<li>Drag the <strong>Distributions</strong> widget to the canvas and connect it to <strong>File</strong> or <strong>Select Columns</strong>.</li>
-<li>Select a numerical variable to see its histogram and a categorical variable to see its bar chart.</li>
-<li>Observe distribution shapes, outliers, and category frequencies.</li>
-<li>Repeat for several important variables, including the target variable.</li>
-<li>Try the <strong>Feature Statistics</strong> widget for additional insights.</li>
-</ol>
-<div class="question-card">
-<p>📝 <strong>Questions:</strong></p>
-<ol type="1">
-<li>Which variables seem most relevant?<br>
-</li>
-<li>How does class imbalance affect model training?</li>
-<li>What do you observe about outliers in numerical variables?<br>
-</li>
-<li>How can variable distributions influence preprocessing and modeling choices?</li>
-</ol>
-</div>
-<hr>
-</section>
-<section id="relationships-between-variables" class="level2">
-<h2 class="anchored" data-anchor-id="relationships-between-variables">5. Relationships between variables</h2>
-<div class="objective-card">
-<p>🎯 <strong>Objective:</strong> Observe patterns and correlations between variables.</p>
-</div>
-<p>In this activity you will explore relationships between variables to identify patterns, correlations, and potential interactions that may be relevant for analysis. This is critical to understand how variables relate to each other and to the target.</p>
-<p><img src="_resources/images/spiderman.jpg" class="img-center img-fluid"></p>
-<p>Steps:</p>
-<ol type="1">
-<li>Drag the <strong>Scatter Plot</strong> widget to the canvas and connect it to <strong>File</strong> or <strong>Select Columns</strong>.</li>
-<li>Select two numerical variables for the X and Y axes.</li>
-<li>Color the points by the target variable to see class distribution.</li>
-<li>Experiment with different variable pairs to find interesting relationships.</li>
-</ol>
-<div class="question-card">
-<p>📝 <strong>Questions:</strong></p>
-<ol type="1">
-<li>Do you see clear groupings or separations between classes? What does that mean?</li>
-<li>Interpret the patterns seen in the scatter plots.</li>
-<li>Which variable relationships might help predict the target?<br>
-</li>
-<li>How might these relationships influence feature selection for modeling?</li>
-</ol>
-</div>
-<hr>
-</section>
-<section id="customizing-the-analysis" class="level2">
-<h2 class="anchored" data-anchor-id="customizing-the-analysis">6. Customizing the analysis</h2>
-<div class="objective-card">
-<p>🎯 <strong>Objective:</strong> Select only relevant variables and improve the workflow.</p>
-</div>
-<p><img src="_resources/images/selection.gif" class="img-right img-fluid" alt="Figure: Selection"> Not all variables in a dataset are equally useful for analysis or modeling. In this activity you will learn to select and focus on the most relevant variables, improving efficiency and effectiveness. To do this:</p>
-<ol type="1">
-<li>Use the <strong>Select Columns</strong> widget to choose variables you consider most important based on previous visualizations.</li>
-<li>Hide columns that don’t add useful information (for example, unique identifiers, names, etc.).<br>
-</li>
-<li>Change the target variable if necessary and observe how it affects the connected widgets.</li>
-<li>Review and adjust the workflow to focus on selected variables.</li>
-</ol>
-<div class="question-card">
-<p>📝 <strong>Questions:</strong></p>
-<ol type="1">
-<li>What criteria did you use to select relevant variables?<br>
-</li>
-<li>How did this affect visualizations and analysis?</li>
-<li>What did you learn about the importance of feature selection in data analysis?<br>
-</li>
-<li>What steps would you take to validate that the selected variables are appropriate?<br>
-</li>
-</ol>
-</div>
-<hr>
-</section>
-<section id="detecting-data-problems" class="level2">
-<h2 class="anchored" data-anchor-id="detecting-data-problems">7. Detecting data problems</h2>
-<div class="objective-card">
-<p>🎯 <strong>Objective:</strong> Identify missing values and other irregularities.</p>
-</div>
-<p><img src="_resources/images/error.jpg" class="img-right img-fluid" alt="Figure: Error"> Finally, it’s essential to detect and handle common data issues like missing values, inconsistencies, or errors. These problems can negatively affect analysis and model building if not addressed.</p>
-<p>Using the <code>heart_disease.tab</code> dataset, follow these steps:</p>
-<ol type="1">
-<li>Drag the <strong>Data Info</strong> widget to the canvas and connect it to <strong>File</strong> or <strong>Select Columns</strong>.</li>
-<li>Review the dataset summary provided by <strong>Data Info</strong>, paying attention to:
+<p>When we build a machine learning model, we want it to learn patterns that it can apply to new situations, not just memorize the examples we give it. To check whether this is happening, we need to separate our data into two parts:</p>
 <ul>
-<li>Number of rows and columns.</li>
-<li>Variable types.</li>
-<li>Missing or inconsistent values.</li>
-</ul></li>
-<li>Identify any potential problems in the data.</li>
-<li>Consider strategies to handle these issues, such as filling missing values, removing rows or columns, or transforming data.</li>
-</ol>
+<li><strong>Training</strong> set: the data the model uses to learn.</li>
+<li><strong>Test</strong> set: the data we keep aside to check how well the model works on unseen examples.</li>
+</ul>
+<p>If we only test the model on the same data it was trained on, the results can be misleading. The model might look perfect simply because it has memorized the answers, but this tells us little about how it will behave in the real world.</p>
+<p><img src="_resources/images/exam.gif" class="img-right img-fluid"></p>
+<p>Think of it like studying for an exam:</p>
+<ul>
+<li>You practice with exercises from your textbook (<strong>training</strong>).</li>
+<li>Then you take the actual exam, which has different questions (<strong>testing</strong>).</li>
+</ul>
+<p>Only by doing well on the exam can you be sure that you truly understand the material, rather than just memorizing the practice exercises. Machine learning works the same way: testing on new data shows whether the model has really learned and can generalize to future cases.</p>
+<section id="random-partitions" class="level3">
+<h3 class="anchored" data-anchor-id="random-partitions">2.1 Random partitions</h3>
+<p>Start by creating a random partition of the dataset into training and test sets. A common split is 70% for training and 30% for testing, but you can choose different proportions based on your needs.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="_resources/images/randomsampling.png" class="img-center img-fluid figure-img"></p>
+<figcaption>Source:https://blogs.sas.com/content/subconsciousmusings/</figcaption>
+</figure>
+</div>
+<p>Use the <strong>Data Sampler</strong> widget to create a random partition of the dataset. Set the sampling type to “Random” and choose a proportion for the training set (e.g., 70% for training and 30% for testing). Connect the output of the <strong>Data Sampler</strong> to two <strong>Data Table</strong> widgets to visualize both the training and test sets. You need to ensure the input to each table is the corresponding output from the <strong>Data Sampler</strong> (one contains the training subset and the other contains the test subset).</p>
+<p>Visualize how two relevant features are distributed in both subsets. You can use the <strong>Scatter Plot</strong> widget to visualize the relationship between two numerical features, and the <strong>Distributions</strong> widget to see how individual features are distributed. Compare the distributions in the training and test sets to see if they are similar.</p>
+<p>Then repeat the process with 95% for training and 5% for testing.</p>
 <div class="question-card">
 <p>📝 <strong>Questions:</strong></p>
 <ol type="1">
-<li>What problems did you find in the data?<br>
-</li>
-<li>What strategies would you propose to handle missing values or inconsistencies?</li>
-<li>How would you decide between removing data or imputing values?<br>
-</li>
-<li>What consequences can ignoring missing values have?</li>
+<li>What proportion did you choose for the training and test sets? Why? Change the proportion and see how it affects the distributions.</li>
+<li>Do the distributions of key features look similar in both subsets? If not, what differences did you observe?</li>
+<li>Why is it important to have similar distributions in both the training and test sets?</li>
+<li>How does changing the proportion of the split (e.g., 70/30 vs.&nbsp;95/5) affect the distributions in the training and test sets?</li>
 </ol>
+</div>
+<!-- Solution
+
+1. A common choice is 70% for training and 30% for testing, as it provides a good balance between having enough data to train the model and enough data to evaluate its performance. Changing the proportion can affect the distributions; for example, a very small test set may not represent the overall data well. However, the choice can depend on the specific dataset and problem.
+2. The distributions should ideally be similar, but there may be some differences due to the randomness of the sampling process. If significant differences are observed, it could indicate that the random sampling did not capture the overall data distribution well.
+3. Similar distributions are important to ensure that the model is evaluated on data that is representative of what it was trained on. If the test set has a different distribution, the model's performance may not accurately reflect its ability to generalize to new data.
+ -->
+</section>
+<section id="stratified-partitions" class="level3">
+<h3 class="anchored" data-anchor-id="stratified-partitions">2.2 Stratified partitions</h3>
+<p>In some cases, especially when dealing with imbalanced datasets (where one class is much more common than another), random sampling might not preserve the class distribution in both subsets. This can lead to misleading results when evaluating the model. To address this, we can use stratified sampling, which ensures that the class proportions are maintained in both the training and test sets.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="_resources/images/stratifiedsampling.png" class="img-center img-fluid figure-img"></p>
+<figcaption>Source:https://blogs.sas.com/content/subconsciousmusings/</figcaption>
+</figure>
+</div>
+<p>Use the <strong>Data Sampler</strong> widget again, but this time set the sampling type to “Stratified”. Choose the target variable (the one indicating the presence or absence of CKD) to ensure that both subsets maintain the same class distribution as the original dataset. Then repeat the process of visualizing the distributions of key features in both subsets using the <strong>Scatter Plot</strong> widget.</p>
+<div class="question-card">
+<p>📝 <strong>Questions:</strong></p>
+<ol type="1">
+<li>How does stratified sampling differ from random sampling in terms of class distribution?</li>
+<li>Did you notice any differences in the distributions of key features between the training and test sets when using stratified sampling?</li>
+<li>Why is stratified sampling particularly important for imbalanced datasets?</li>
+</ol>
+</div>
+<!-- Solution
+
+1. Stratified sampling ensures that the class proportions are maintained in both the training and test sets, while random sampling may not preserve these proportions, especially in imbalanced datasets.
+2. When using stratified sampling, the distributions of key features in both subsets should be more similar compared to random sampling, especially for the target variable.
+3. Stratified sampling is important for imbalanced datasets because it prevents one class from being underrepresented in either the training or test set, which could lead to biased model performance and unreliable evaluation results.
+ -->
+</section>
+<section id="cross-validation" class="level3">
+<h3 class="anchored" data-anchor-id="cross-validation">2.3 Cross-validation</h3>
+<p>In addition to creating a single training and test split, another common approach to evaluate machine learning models is cross-validation. This technique involves dividing the dataset into multiple subsets (or “folds”) and training/testing the model multiple times, each time using a different fold as the test set and the remaining folds as the training set. This helps to ensure that the model’s performance is robust and not dependent on a particular split of the data.</p>
+<p><img src="_resources/images/Cross validation.png" class="img-center img-fluid"></p>
+<p>We will implement cross-validation in the next lab session when we start building and evaluating models. For now, just understand that it is a powerful technique to assess model performance more reliably.</p>
+</section>
+<section id="validation-set" class="level3">
+<h3 class="anchored" data-anchor-id="validation-set">2.4 Validation set</h3>
+<p><img src="_resources/images/validation.gif" class="img-right img-fluid"></p>
+<p>In addition to the training and test sets, it is often useful to create a third subset called the validation set. This set is used during the model development process to tune hyperparameters and make decisions about model architecture without touching the test set. The validation set helps to prevent overfitting to the training data and provides an unbiased evaluation of the model during development.</p>
+<p>We will implement the validation set in the next lab session when we start building and evaluating models. For now, just understand its purpose and importance.</p>
+<hr>
+</section>
+</section>
+<section id="data-normalization" class="level2">
+<h2 class="anchored" data-anchor-id="data-normalization">3. Data normalization</h2>
+<div class="objective-card">
+<p>🎯 <strong>Objective:</strong> Understand the importance of normalizing data.</p>
+</div>
+<p>When working with datasets that contain numerical features on different scales, it is important to normalize the data. Normalization ensures that all features contribute equally to the distance calculations used by many machine learning algorithms. If one feature has a much larger range than others, it can dominate the distance metric and lead to biased results. For example, if one feature ranges from 0 to 1 and another ranges from 0 to 1000, the second feature will have a much larger impact on the distance calculations.</p>
+<section id="min-max-normalization" class="level3">
+<h3 class="anchored" data-anchor-id="min-max-normalization">3.1 Min-Max normalization</h3>
+<p>Min-Max normalization is a common technique used to scale features to a specific range, usually [0, 1]. The formula for Min-Max normalization is:</p>
+<p><span class="math display">\[
+X' = \frac{X - X_{min}}{X_{max} - X_{min}}
+\]</span></p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(X\)</span> is the original value,</li>
+<li><span class="math inline">\(X_{min}\)</span> is the minimum value of the feature,</li>
+<li><span class="math inline">\(X_{max}\)</span> is the maximum value of the feature,</li>
+<li><span class="math inline">\(X'\)</span> is the normalized value.</li>
+</ul>
+<p>Pass your data to the <strong>Continuize</strong> widget, and then connect the output to a <strong>Distributions</strong> widget to visualize the effect of normalization on the features. Visualize how two relevant features are distributed before and after applying Min-Max normalization.</p>
+<div class="question-card">
+<p>📝 <strong>Questions:</strong></p>
+<ol type="1">
+<li>What are the advantages of using Min-Max normalization?</li>
+<li>Are there any potential drawbacks to using Min-Max normalization?</li>
+<li>How did the distributions of the features change after applying Min-Max normalization?</li>
+</ol>
+</div>
+<!-- Solution
+1. Min-Max normalization scales features to a specific range, which can improve the performance of machine learning algorithms that rely on distance calculations. It also preserves the relationships between the original data points.
+2. One potential drawback is that Min-Max normalization is sensitive to outliers. If the dataset contains extreme values, they can significantly affect the scaling of the other data points.
+3. After applying Min-Max normalization, the distributions of the features should be scaled to the range [0, 1]. The shape of the distributions may remain similar, but the values will be adjusted to fit within the specified range.
+-->
+</section>
+<section id="standardization" class="level3">
+<h3 class="anchored" data-anchor-id="standardization">3.2 Standardization</h3>
+<p>Standardization (also known as Z-score normalization) is another common technique used to scale features. It transforms the data to have a mean of 0 and a standard deviation of 1. The formula for the standardization is: <span class="math display">\[
+X' = \frac{X - \mu}{\sigma}
+\]</span> where:</p>
+<ul>
+<li><span class="math inline">\(X\)</span> is the original value,</li>
+<li><span class="math inline">\(\mu\)</span> is the mean of the feature,</li>
+<li><span class="math inline">\(\sigma\)</span> is the standard deviation of the feature,</li>
+<li><span class="math inline">\(X'\)</span> is the normalized value.</li>
+</ul>
+<p>Change the <strong>Continuize</strong> widget to “Standardization”, and then connect the output to a <strong>Distributions</strong> widget to visualize the effect of Standardization on the features. Visualize how two relevant features are distributed before and after applying Standardization.</p>
+<div class="question-card">
+<p>📝 <strong>Questions:</strong></p>
+<ol type="1">
+<li>What are the advantages of using Standardization?</li>
+<li>Are there any potential drawbacks to using Standardization?</li>
+<li>How did the distributions of the features change after applying Standardization?</li>
+</ol>
+</div>
+<!-- Solution
+1. Standardization transforms features to have a mean of 0 and a standard deviation of 1, which can improve the performance of machine learning algorithms that assume normally distributed data. It is also less sensitive to outliers compared to Min-Max normalization.
+2. One potential drawback is that Standardization assumes that the data is normally distributed. If the data is heavily skewed, this method may not be appropriate.
+3. After applying Standardization, the distributions of the features should be centered around 0 with a standard deviation of 1. The shape of the distributions may remain similar, but the values will be adjusted to fit the standardized scale.
+-->
+</section>
+<section id="outlier-effects-on-normalization" class="level3">
+<h3 class="anchored" data-anchor-id="outlier-effects-on-normalization">3.3 Outlier effects on normalization</h3>
+<p><img src="_resources/images/bloodpressure.jpeg" class="img-right img-fluid"></p>
+<p>Outliers are extreme values that differ significantly from other observations in the dataset. They can arise due to measurement errors, data entry mistakes, or genuine variability in the data. Outliers can have a significant impact on normalization techniques, especially Min-Max normalization, as they can skew the scaling of the other data points.</p>
+<p>Let’s take a look at variable <code>bp</code> (blood pressure) in the dataset. Use the <strong>Scatter Plot</strong> and/or <strong>Box Plot</strong> widget to visualize the distribution of this variable and identify any potential outliers. Then, apply both Min-Max normalization and Standardization to the dataset using the <strong>Continuize</strong> widget, and visualize how the distributions of the <code>bp</code> variable change after normalization.</p>
+<div class="question-card">
+<p>📝 <strong>Questions:</strong></p>
+<ol type="1">
+<li>How do outliers affect Min-Max normalization?</li>
+<li>How do outliers affect Standardization?</li>
+</ol>
+</div>
+<!-- Solution
+1. Outliers can significantly affect Min-Max normalization by stretching the range of the feature, which can lead to other data points being compressed into a smaller range.
+2. Outliers can also affect Standardization by increasing the standard deviation, which can lead to other data points being scaled down
+-->
+</section>
+<section id="normalization-and-data-partitions" class="level3">
+<h3 class="anchored" data-anchor-id="normalization-and-data-partitions">3.4 Normalization and data partitions</h3>
+<p>It is crucial to apply normalization techniques only to the training set and then use the same parameters (e.g., min, max, mean, standard deviation) to transform the test set. This prevents data leakage, which occurs when information from the test set is used during the training process, leading to overly optimistic performance estimates.</p>
+<p>To achieve this in Orange, you can use the <strong>Apply Domain</strong> widget to fit the normalization parameters on the training set and then apply them to the test set. To do it, you need to connect the output of the <strong>Data Sampler</strong> (training set) to the <strong>Continuize</strong> widget, and then connect the output of the <strong>Continuize</strong> widget to the <strong>Apply Domain</strong> widget and set it as <code>Template Data</code>. Finally, connect the test set output from the <strong>Data Sampler</strong> to the <strong>Apply Domain</strong> widget and set it as <code>Data</code>. This way, the normalization parameters are learned from the training set and applied to the test set.</p>
+<div class="question-card">
+<p>📝 <strong>Questions:</strong></p>
+<ol type="1">
+<li>Why is it important to apply normalization techniques only to the training set?</li>
+<li>What could happen if we used the test set to fit the normalization parameters?</li>
+<li>How does the <strong>Apply Domain</strong> widget work in Orange for normalization?</li>
+</ol>
+</div>
+<!-- Solution
+1. It is important to apply normalization techniques only to the training set to prevent data leakage, which can lead to overly optimistic performance estimates.
+2. If we used the test set to fit the normalization parameters, it could introduce information from the test set into the training process, leading to biased results and an inaccurate assessment of the model's performance.
+3. The **Apply Domain** widget in Orange allows you to fit normalization parameters on the training set and then apply them to the test set, ensuring that the test set is transformed using the same parameters learned from the training data.
+-->
+<div class="final-note-card">
+<p>The choice between normalization techniques like Min-Max normalization and Standardization depends on the specific characteristics of the dataset and the requirements of the machine learning algorithm being used. Min-Max normalization is often preferred when the data is uniformly distributed and the algorithm requires a specific range (e.g., [0, 1]). Standardization is more suitable for algorithms that assume normally distributed data or when the data contains outliers.</p>
+<p>In practice, it is essential to visualize the data distribution before and after applying normalization techniques. This can help identify the most appropriate method and ensure that the transformed data meets the assumptions of the chosen machine learning algorithm.</p>
 </div>
 <hr>
 </section>
+</section>
+<section id="data-imputation" class="level2">
+<h2 class="anchored" data-anchor-id="data-imputation">4. Data imputation</h2>
+<div class="objective-card">
+<p>🎯 <strong>Objective:</strong> Learn how to fill missing values in the dataset.</p>
+</div>
+<p><img src="_resources/images/missing.jpg" class="img-right img-fluid"></p>
+<p>Missing values are a common issue in real-world datasets. They can occur for various reasons, such as data entry errors, equipment malfunctions, or respondents skipping questions in surveys. Handling missing values is crucial because they can lead to biased results and reduce the effectiveness of machine learning models. There are several strategies to deal with missing values, including:</p>
+<ul>
+<li><strong>Removing rows or columns</strong> with missing values (if the amount of missing data is small).</li>
+<li><strong>Imputing missing values</strong> using statistical measures (mean, median, mode) or more advanced techniques (e.g., k-nearest neighbors, regression).</li>
+</ul>
+<p>The choice of method depends on the nature of the data and the extent of missingness.</p>
+<section id="removing-missing-values" class="level3">
+<h3 class="anchored" data-anchor-id="removing-missing-values">4.1 Removing missing values</h3>
+<p>First, let’s see how to remove rows with missing values. Use the <strong>Impute</strong> widget to filter out rows that contain any missing values. Connect the output to a <strong>Data Table</strong> widget to visualize the cleaned dataset.</p>
+<div class="question-card">
+<p>📝 <strong>Questions:</strong> 1. How many rows were removed due to missing values? 2. What are the potential drawbacks of removing rows with missing values?</p>
+</div>
+<!-- Solution
+1. The number of rows removed will depend on the specific dataset being used. You can check the number of rows before and after applying the filter to determine how many were removed.
+2. Removing rows with missing values can lead to a loss of valuable information, especially if a significant portion of the dataset contains missing values. It can also introduce bias if the missingness is not random (e.g., if certain groups are more likely to have missing data).
+-->
+</section>
+<section id="imputing-missing-values" class="level3">
+<h3 class="anchored" data-anchor-id="imputing-missing-values">4.2 Imputing missing values</h3>
+<p>In many cases, it may be more appropriate to impute missing values rather than removing them. Imputation involves filling in missing values with estimated ones based on the available data. There are several methods for imputing missing values, including:</p>
+<ul>
+<li><strong>Mean/Median/Mode Imputation:</strong> Replace missing values with the mean, median, or mode of the column.</li>
+<li><strong>K-Nearest Neighbors (KNN) Imputation:</strong> Use the values from the nearest neighbors to estimate the missing values.</li>
+<li><strong>Regression Imputation:</strong> Use regression models to predict and fill in missing values based on other features.</li>
+</ul>
+<p>Use the <strong>Impute</strong> widget to fill in missing values. You can choose different imputation methods for different columns. Connect the output to a <strong>Data Table</strong> widget to visualize the imputed dataset.</p>
+<div class="question-card">
+<p>📝 <strong>Questions:</strong></p>
+<ol type="1">
+<li>What are the advantages and disadvantages of using imputation methods for handling missing values?</li>
+<li>How can you assess the impact of imputation on the overall dataset?</li>
+<li>In what situations might you prefer to use imputation over simply removing missing values?</li>
+</ol>
+</div>
+<!-- Solution
+1. Advantages of imputation include preserving the dataset size and retaining valuable information. Disadvantages include the potential introduction of bias if the imputation method does not accurately reflect the underlying data distribution.
+2. You can assess the impact of imputation by comparing the distributions of the original and imputed datasets, as well as evaluating the performance of machine learning models trained on both datasets.
+3. Imputation is preferred when the amount of missing data is significant, and removing rows would lead to a substantial loss of information. It is also useful when the missingness is not random, and removing rows could introduce bias.
+-->
+<hr>
+</section>
+</section>
+</section>
+<section id="mini-project-preparing-data-for-modeling" class="level1">
+<h1>Mini-project: Preparing data for modeling</h1>
+<p>In this mini-project, you will apply the concepts learned in this session to preprocess a new dataset.</p>
+<p><img src="_resources/images/car.jpg" class="img-right img-fluid"></p>
+<p>Imagine you have just joined a research group studying automobile quality and market pricing. The team has collected the <strong>Imports 1985</strong> dataset (available in the <strong>Datasets</strong> widget). The first impression may be that it is rich and detailed. However, a closer look reveals several problems: some attributes contain missing or inconsistent entries (often encoded as <code>?</code>), others are measured on very different scales, and there are a few extreme cases that could either be genuine market outliers or simple recording mistakes. In addition, some numeric columns may be stored as text and not correctly recognized as numeric, and not all available attributes are necessarily relevant for the prediction task.</p>
+<p>Your role is to design a preprocessing workflow in Orange that transforms this raw dataset into one that is trustworthy and ready for modeling (for example, predicting <code>price</code> or building a classifier for <code>symboling</code>). This will require decisions about which variables to keep, how to treat incomplete data, whether or not to adjust variable scales, and what to do with unusual values. Once you have reached a version of the dataset you consider appropriate, you will need to ensure it is properly divided into training and test subsets so that future models can be evaluated fairly.</p>
+<p>There is no single correct pipeline, and different choices may lead to different results. What matters is that you think carefully about each decision and can justify why you handled the data in the way you did.</p>
 </section>
 <section id="final-note" class="level1">
 <h1>Final note</h1>
 <div class="final-note-card">
-<p>🎉 Well done! You now have a better understanding of the importance of exploring and analyzing data before modeling.<br>
-Before finishing, remember to <strong>save</strong> your workflow with <strong>File &gt; Save As…</strong> so you can resume it later and continue learning.</p>
+<p>✨ Excellent work! You have learned how to preprocess data effectively, which is a crucial step in any machine learning project. By cleaning the data, handling missing values, normalizing features, and creating appropriate data partitions, you have laid a solid foundation for building reliable models.</p>
+<p>In the next session, you will see how these choices impact the performance of supervised learning models. Remember to save both workflows (raw and preprocessed) so you can compare their effects.</p>
 </div>
 <div class="submission-card">
 <p><strong>📤 How to submit</strong></p>
 <ul>
 <li>Save/export your completed report as a PDF.</li>
 <li>Rename the PDF file following the convention below.</li>
-<li>Go to Aula Global &rarr; this course &rarr; Assignments &rarr; &ldquo;Lab 1&rdquo; submission box, and upload the PDF there before the deadline.</li>
+<li>Go to Aula Global &rarr; this course &rarr; Assignments &rarr; &ldquo;Lab 2&rdquo; submission box, and upload the PDF there before the deadline.</li>
 <li>Also attach your Orange workflow file (.ows, saved via File &gt; Save As&hellip; in Orange) in the same submission.</li>
 </ul>
-<p>File name: <span class="filename-example">Lab1_Surname1_FirstName1_Surname2_FirstName2.pdf</span> (e.g. <span class="filename-example">Lab1_Garcia_Maria_Fernandez_Juan.pdf</span>)</p>
+<p>File name: <span class="filename-example">Lab2_Surname1_FirstName1_Surname2_FirstName2.pdf</span> (e.g. <span class="filename-example">Lab2_Garcia_Maria_Fernandez_Juan.pdf</span>)</p>
 </div>
 </section>
 <section id="explore-the-labs" class="level1 unnumbered unlisted margin lab-hidden">
